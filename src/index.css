@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+* {
+  font-family: "Bricolage Grotesque", sans-serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
