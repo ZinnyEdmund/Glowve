@@ -23,7 +23,7 @@ const TESTIMONIALS = [
 
 export default function Testimonials() {
   return (
-    <section className="py-16 px-4 bg-linear-to-br from-[#FFF8F0] to-white">
+    <section className="py-16 bg-linear-to-br from-[#FFF8F0] to-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-3">
@@ -42,7 +42,7 @@ export default function Testimonials() {
             >
               <div className="flex items-center gap-1 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
+                  <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />// for the increment of the stars
                 ))}
               </div>
               

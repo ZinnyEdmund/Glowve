@@ -1,6 +1,5 @@
 
 import { Routes, Route } from "react-router-dom";
-import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -47,7 +46,6 @@ export default function App() {
           />
         </Routes>
       </main>
-      <Footer />
     </div>
   );
 }
