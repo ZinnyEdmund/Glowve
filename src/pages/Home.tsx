@@ -11,17 +11,27 @@ import Footer from "../components/Footer";
 
 export default function Home() {
   return (
-    <div>
-      <Navbar />
-      <Hero />
-      <TrustBadges />
-      <Feature />
-      <NewArrivals />
-      <PromoBanner />
-      <Testimonials />
-      <Newsletter />
-      <InstagramFeed />
-      <Footer />
+    <div className="min-h-screen flex justify-center">
+      <div className="w-full mx-auto">
+        <Navbar />
+        <Hero />
+        <div className="w-full bg-primary-6 py-0">
+          <div className="container mx-auto p-0">
+            <TrustBadges />
+          </div>
+        </div>
+        <Feature />
+        <NewArrivals />
+        <PromoBanner />
+        <Testimonials />
+        <div className="w-full bg-primary-6 py-0">
+          <div className="container mx-auto p-0">
+            <Newsletter />
+          </div>
+        </div>
+        <InstagramFeed />
+        <Footer />
+      </div>
     </div>
   );
 }

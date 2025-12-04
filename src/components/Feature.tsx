@@ -12,7 +12,8 @@ const FEATURES = [
 
 export default function Feature() {
  return (
-    <div className="py-12">
+    <section className="py-12">
+      <div className="max-w-7xl mx-auto px-4">
       <h2 className="text-3xl font-bold text-center mb-8">
         Featured Categories
       </h2>
@@ -34,6 +35,7 @@ export default function Feature() {
           </div>
         ))}
       </div>
-    </div>
+      </div>
+    </section>
   );
 }

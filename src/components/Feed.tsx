@@ -18,7 +18,7 @@ const INSTAGRAM_POSTS: InstaPost[] = [
 ];
 
 const InstagramFeed: FC = memo(() => (
-  <section className="py-20 bg-white">
+  <section className="py-20">
     <div className="max-w-7xl mx-auto px-4">
       <div className="text-center mb-14 space-y-3">
         <h2 className="text-4xl md:text-5xl font-bold text-gray-900">

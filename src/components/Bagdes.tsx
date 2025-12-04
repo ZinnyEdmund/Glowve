@@ -17,10 +17,10 @@ const BADGES: Badge[] = [
 ];
 
 const TrustBadges: FC = memo(() => (
-  <section className="py-16 relative overflow-hidden">
-    <div className="absolute inset-0 bg-linear-to-br from-[#FFF8F0] via-white to-[#FFE8E0] opacity-60" />
-    <div className="max-w-7xl mx-auto px-4 relative">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+  <section className="py-16">
+    <div className="inset-0 opacity-60" />
+    <div className="max-w-8xl mx-auto ">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6">
         {BADGES.map(({ icon: Icon, title, description }, index) => (
           <div
             key={title}
@@ -32,8 +32,8 @@ const TrustBadges: FC = memo(() => (
               <div className="p-3 rounded-xl bg-linear-to-br from-[#755757] to-[#5a4242] text-white mb-4 group-hover:scale-110 transition-transform">
                 <Icon size={24} strokeWidth={1.5} />
               </div>
-              <h3 className="font-bold text-gray-900 mb-1 text-sm md:text-base">{title}</h3>
-              <p className="text-xs md:text-sm text-gray-600">{description}</p>
+              <h3 className="font-bold text-black mb-1 text-sm md:text-2xl">{title}</h3>
+              <p className="text-xs md:text-lg text-gray-600">{description}</p>
             </div>
           </div>
         ))}

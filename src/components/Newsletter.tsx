@@ -9,7 +9,7 @@ const Newsletter: FC = memo(() => {
 
   return (
     <section className="py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-linear-to-br from-[#FFF8F0] to-[#FFE8E0]" />
+      <div className="absolute inset-0" />
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiM3NTU3NTciIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDE2aDh2OGgtOHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-50" />
 
       <div className="max-w-4xl mx-auto px-4 relative">
