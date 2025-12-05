@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, ReactNode } from 'react'
+import { createContext, useContext, useState, useMemo } from 'react'
+import type { ReactNode } from "react"
 import type { CartItem, Product } from '../types'
 
 type CartCtx = {
@@ -16,7 +17,7 @@ const CartContext = createContext<CartCtx | undefined>(undefined)
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([])
 
-  function addToCart(product: Product) {
+  const addToCart = (product: Product) => {
     setCart(prev => {
       const existing = prev.find(item => item.id === product.id)
       if (existing) {
@@ -30,11 +31,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     })
   }
 
-  function removeFromCart(productId: number) {
+  const removeFromCart = (productId: number) => {
     setCart(prev => prev.filter(item => item.id !== productId))
   }
 
-  function updateQuantity(productId: number, quantity: number) {
+  const updateQuantity = (productId: number, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(productId)
     } else {
@@ -46,20 +47,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  function clearCart() {
-    setCart([])
-  }
+  const clearCart = () => setCart([])
 
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0)
-  const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  // Memoize expensive calculations to prevent unnecessary re-renders
+  const { cartCount, cartTotal } = useMemo(() => {
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0)
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    return { cartCount: count, cartTotal: total }
+  }, [cart])
 
-  return (
-    <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, cartCount, cartTotal }}
-    >
-      {children}
-    </CartContext.Provider>
+  // Memoize the context value to prevent unnecessary re-renders
+  const value = useMemo(
+    () => ({ cart, addToCart, removeFromCart, updateQuantity, clearCart, cartCount, cartTotal }),
+    [cart, cartCount, cartTotal]
   )
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }
 
 export function useCart() {
@@ -67,4 +70,3 @@ export function useCart() {
   if (!ctx) throw new Error('useCart must be inside CartProvider')
   return ctx
 }
-

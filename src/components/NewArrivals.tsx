@@ -52,7 +52,7 @@ const NewArrivals: FC = memo(() => (
               Just Dropped
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">New Arrivals</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-black tracking-tight">New Arrivals</h2>
           <p className="text-gray-600 text-lg">Discover our latest collection</p>
         </div>
 

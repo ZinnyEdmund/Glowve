@@ -36,7 +36,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="bg-white/30 backdrop-blur-md border-b border-white/20 sticky top-0 z-40">
+    <nav className="bg-white/30 backdrop-blur-md border-b border-white/20 sticky top-0 z-40 px-9">
       <div className="py-4 flex justify-between items-center">
         <Link
           to="/"

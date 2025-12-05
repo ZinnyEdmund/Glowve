@@ -19,7 +19,7 @@ const BADGES: Badge[] = [
 const TrustBadges: FC = memo(() => (
   <section className="py-16">
     <div className="inset-0 opacity-60" />
-    <div className="max-w-8xl mx-auto ">
+    <div className="max-w-7xl mx-auto ">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6">
         {BADGES.map(({ icon: Icon, title, description }, index) => (
           <div

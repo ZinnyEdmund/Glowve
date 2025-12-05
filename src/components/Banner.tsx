@@ -15,7 +15,7 @@ const PromoBanner: FC = memo(() => (
               Limited Time Offer
             </span>
 
-            <h2 className="text-4xl lg:text-6xl font-bold leading-tight">
+            <h2 className="text-3xl lg:text-5xl font-bold leading-tight">
               Summer
               <br />
               <span className="bg-linear-to-r from-yellow-200 to-pink-200 bg-clip-text text-transparent">

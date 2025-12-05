@@ -21,9 +21,9 @@ const InstagramFeed: FC = memo(() => (
   <section className="py-20">
     <div className="max-w-7xl mx-auto px-4">
       <div className="text-center mb-14 space-y-3">
-        <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+        <h2 className="text-4xl md:text-5xl font-bold text-black">
           Follow Us{" "}
-          <span className="bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">@glowve</span>
+          <span className="bg-linear-to-r from-[#755757eb] to-[#785454dd] bg-clip-text text-transparent">@glowve</span>
         </h2>
         <p className="text-gray-600 text-lg">Join our community and share your style</p>
       </div>
