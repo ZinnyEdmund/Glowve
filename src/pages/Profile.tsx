@@ -9,8 +9,6 @@ import {
   MapPin,
   Save,
   Check,
-  Lock,
-  ArrowRight,
   User,
   Crown
 } from 'lucide-react'

@@ -1,8 +1,68 @@
-// src/api/index.ts (or api.ts)
+// src/api/index.ts - FIXED VERSION
 
 import type { Product, User, Order } from '../types'
 
 const API_BASE = 'https://dummyjson.com'
+const DB_KEY = 'malli_mock_db_v1'
+
+// DATABASE HELPERS
+
+type UserWithPassword = User & { password: string }
+
+type MockDB = {
+  users: Record<string, UserWithPassword>
+  orders: Order[]
+}
+
+function getDB(): MockDB {
+  try {
+    const raw = localStorage.getItem(DB_KEY)
+    if (!raw) {
+      // Initialize empty DB
+      const initialDB: MockDB = {
+        users: {
+          'demo@example.com': {
+            email: 'demo@example.com',
+            name: 'Admin Demo',
+            role: 'admin',
+            phone: '(555) 123-4567',
+            address: '123 Main St',
+            city: 'San Francisco',
+            zipCode: '94105',
+            password: 'Demo123!'
+          },
+          'john@example.com': {
+            email: 'john@example.com',
+            name: 'John Doe',
+            role: 'user',
+            phone: '(555) 987-6543',
+            address: '456 Oak Ave',
+            city: 'New York',
+            zipCode: '10001',
+            password: 'John123!'
+          }
+        },
+        orders: []
+      }
+      localStorage.setItem(DB_KEY, JSON.stringify(initialDB))
+      return initialDB
+    }
+    return JSON.parse(raw)
+  } catch (error) {
+    console.error('Error reading DB:', error)
+    return { users: {}, orders: [] }
+  }
+}
+
+function saveDB(db: MockDB): void {
+  try {
+    localStorage.setItem(DB_KEY, JSON.stringify(db))
+    console.log('DB saved successfully:', db) // Debug log
+  } catch (error) {
+    console.error('Error saving DB:', error)
+    throw error
+  }
+}
 
 // PRODUCT API FUNCTIONS
 
@@ -71,39 +131,14 @@ export async function searchProducts(query: string): Promise<Product[]> {
   }
 }
 
-// ============================================
-// AUTH FUNCTIONS (Mock - Keep your existing logic)
-// ============================================
-
-type UserWithPassword = User & { password: string }
-
-const mockUsers: Record<string, UserWithPassword> = {
-  'demo@example.com': { 
-    email: 'demo@example.com', 
-    name: 'Admin Demo', 
-    role: 'admin',
-    phone: '(555) 123-4567',
-    address: '123 Main St',
-    city: 'San Francisco',
-    zipCode: '94105',
-    password: 'Demo123!' 
-  },
-  'john@example.com': { 
-    email: 'john@example.com', 
-    name: 'John Doe', 
-    role: 'user',
-    phone: '(555) 987-6543',
-    address: '456 Oak Ave',
-    city: 'New York',
-    zipCode: '10001',
-    password: 'John123!' 
-  }
-}
+// AUTH FUNCTIONS
 
 export async function login(email: string, password: string): Promise<User> {
   await new Promise(res => setTimeout(res, 300))
   
-  const user = mockUsers[email]
+  const db = getDB()
+  const user = db.users[email]
+  
   if (!user) throw new Error('User not found')
   if (user.password !== password) throw new Error('Invalid password')
   
@@ -114,26 +149,50 @@ export async function login(email: string, password: string): Promise<User> {
 export async function register(user: UserWithPassword): Promise<User> {
   await new Promise(res => setTimeout(res, 300))
   
-  if (mockUsers[user.email]) throw new Error('Email already registered')
+  const db = getDB()
   
-  mockUsers[user.email] = user
+  if (db.users[user.email]) throw new Error('Email already registered')
+  
+  db.users[user.email] = user
+  saveDB(db)
+  
   const { password: _, ...userData } = user
   return userData
 }
 
-// ============================================
-// ORDER FUNCTIONS (Mock)
-// ============================================
-
-const mockOrders: Order[] = []
+// ORDER FUNCTIONS - FIXED!
 
 export async function placeOrder(order: Order): Promise<Order> {
   await new Promise(res => setTimeout(res, 300))
-  mockOrders.push(order)
+  
+  console.log('Placing order:', order) // Debug log
+  
+  const db = getDB()
+  
+  // Add order to the orders array
+  db.orders.push(order)
+  
+  // Save to localStorage
+  saveDB(db)
+  
+  console.log('Order saved. Total orders:', db.orders.length) // Debug log
+  
   return order
 }
 
 export async function fetchOrders(): Promise<Order[]> {
   await new Promise(res => setTimeout(res, 200))
-  return mockOrders
+  
+  const db = getDB()
+  console.log('Fetching orders. Total:', db.orders.length) // Debug log
+  
+  return db.orders
+}
+
+// Optional: Get orders for specific user
+export async function fetchUserOrders(userId: string): Promise<Order[]> {
+  await new Promise(res => setTimeout(res, 200))
+  
+  const db = getDB()
+  return db.orders.filter(order => order.userId === userId)
 }

@@ -130,7 +130,7 @@ export default function ProductCard({ product, onAdd }: Props) {
           className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 ${
             product.stock === 0
               ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              : 'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg active:scale-95'
+              : 'bg-linear-to-r from-[#755757] to-[#5a4242] text-white hover:bg-[#755757] hover:shadow-lg active:scale-95'
           }`}
         >
           {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
