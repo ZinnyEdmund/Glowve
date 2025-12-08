@@ -87,7 +87,7 @@ export default function Products() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search products, brands..."
-            className="w-full px-5 py-3 pl-12 rounded-xl border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent outline-none transition"
+            className="w-full px-5 py-3 pl-12 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#755757] focus:border-transparent outline-none transition"
           />
           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
               <Search />
@@ -131,7 +131,7 @@ export default function Products() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as unknown as typeof sortBy)}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#755757] focus:border-transparent outline-none bg-white"
           >
             <option value="default">Default</option>
             <option value="price-low">Price: Low to High</option>

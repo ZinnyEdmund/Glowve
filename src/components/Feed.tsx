@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+// import { ArrowRight } from "lucide-react";
 import { memo } from "react";
 import type { FC } from "react";
 
@@ -51,7 +51,7 @@ const InstagramFeed: FC = memo(() => (
         ))}
       </div>
 
-      <div className="text-center mt-12">
+      {/* <div className="text-center mt-12">
         <a
           href="#instagram"
           className="inline-flex items-center gap-2 text-[#755757] font-semibold text-lg hover:gap-3 transition-all group"
@@ -59,7 +59,7 @@ const InstagramFeed: FC = memo(() => (
           View More on Instagram
           <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
         </a>
-      </div>
+      </div> */}
     </div>
   </section>
 ));

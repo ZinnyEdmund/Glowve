@@ -1,6 +1,7 @@
 import { ArrowRight, Sparkles } from "lucide-react";
 import { memo } from "react";
 import type { FC } from "react";
+import { Link } from "react-router-dom";
 
 interface Product {
   id: number;
@@ -56,13 +57,13 @@ const NewArrivals: FC = memo(() => (
           <p className="text-gray-600 text-lg">Discover our latest collection</p>
         </div>
 
-        <a
-          href="#products"
+        <Link
+          to="/products"
           className="group flex items-center gap-2 text-[#755757] font-semibold hover:text-[#5a4242] transition-all"
         >
           View All
           <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-        </a>
+        </Link>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">

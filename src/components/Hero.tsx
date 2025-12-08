@@ -1,12 +1,15 @@
 import { useEffect, useState, useMemo } from "react";
-import hoodie from "/hoodie.jpg";
+// import hoodie from "/hoodie.jpg";
+import clo from "/clo.jpg";
 import makeup from "/makeup.jpg";
 import necklace from "/necklace.jpg";
 import skincare from "/skincare.jpg";
+// import skinny from "/skinny.jpg";
+// import fair from "/fair.jpg";
 
 const SLIDES = [
   {
-    image: hoodie,
+    image: clo,
     text: "Style that speaks softly.",
     description: "Timeless looks for every mood.",
     alt: "Stylish hoodie fashion"
