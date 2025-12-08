@@ -67,9 +67,6 @@ export default function ProductCard({ product, onAdd }: Props) {
 
         {/* Quick View Overlay */}
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <button className="bg-white text-gray-900 px-4 py-2 rounded-lg font-semibold transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-            Quick View
-          </button>
         </div>
       </div>
 
@@ -88,7 +85,7 @@ export default function ProductCard({ product, onAdd }: Props) {
         </div>
 
         {/* Title */}
-        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[3rem]">
+        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 min-h-12">
           {product.title}
         </h3>
 

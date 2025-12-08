@@ -1,10 +1,9 @@
-// src/pages/Products.tsx
-
 import { useState, useMemo } from 'react'
 import { useProducts } from '../context/ProductContext'
 import { useCart } from '../context/CardContext'
 import ProductCard from '../components/ProductCard'
 import Loader from '../components/common/Loader'
+import { Search, X } from 'lucide-react';
 
 export default function Products() {
   const { products, loading, error } = useProducts()
@@ -88,17 +87,17 @@ export default function Products() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search products, brands..."
-            className="w-full px-5 py-3 pl-12 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+            className="w-full px-5 py-3 pl-12 rounded-xl border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent outline-none transition"
           />
           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
-            🔍
+              <Search />
           </span>
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
             >
-              ✕
+               <X />
             </button>
           )}
         </div>
@@ -131,7 +130,7 @@ export default function Products() {
           <label className="text-sm font-semibold text-gray-700 mb-2 block">Sort By</label>
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={(e) => setSortBy(e.target.value as unknown as typeof sortBy)}
             className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
           >
             <option value="default">Default</option>
@@ -160,7 +159,11 @@ export default function Products() {
         </div>
       ) : (
         <div className="text-center py-16">
-          <div className="text-6xl mb-4">🔍</div>
+          <div className="text-6xl mb-4 justify-center flex text-black">
+            <span className="flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mx-auto">
+                <Search />
+            </span>
+          </div>
           <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
           <p className="text-gray-600 mb-4">Try adjusting your search or filters</p>
           <button

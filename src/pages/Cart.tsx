@@ -87,11 +87,11 @@ export default function Cart() {
     )
   }
 
-  // Empty Cart State
+  // For Empty Cart State
   if (cart.length === 0) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-16">
-        <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
+        <div className="bg-white rounded-2xl p-12 text-center">
           <div className="w-32 h-32 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
             <ShoppingCart className="w-16 h-16 text-gray-400" />
           </div>
@@ -101,7 +101,7 @@ export default function Cart() {
           </p>
           <Link
             to="/products"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all hover:scale-105 active:scale-95 font-semibold"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white rounded-lg hover:bg-zinc-700 transition-all hover:scale-105 active:scale-95 font-semibold"
           >
             <ShoppingBag className="w-5 h-5" />
             <span>Browse Products</span>
@@ -134,7 +134,7 @@ export default function Cart() {
             >
               <div className="flex gap-6">
                 {/* Product Image */}
-                <div className="w-24 h-24 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
+                <div className="w-24 h-24 flex-0 bg-gray-100 rounded-lg overflow-hidden">
                   {item.thumbnail ? (
                     <img
                       src={item.thumbnail}
@@ -256,7 +256,7 @@ export default function Cart() {
 
               {subtotal < 50 && shipping > 0 && (
                 <p className="text-xs text-orange-600 bg-orange-50 p-2 rounded flex items-start gap-2">
-                  <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                  <AlertCircle className="w-4 h-4 flex-0 mt-0.5" />
                   <span>Add ${(50 - subtotal).toFixed(2)} more for free shipping!</span>
                 </p>
               )}
