@@ -1,19 +1,19 @@
 // src/components/ProductCard.tsx
 
-import { useState } from 'react'
-import type { Product } from '../types'
+import { useState } from "react";
+import type { Product } from "../types";
 
 type Props = {
-  product: Product
-  onAdd: () => void
-}
+  product: Product;
+  onAdd: () => void;
+};
 
 export default function ProductCard({ product, onAdd }: Props) {
-  const [imgLoaded, setImgLoaded] = useState(false)
-  const [currentImg, setCurrentImg] = useState(0)
-  
-  const discount = product.discountPercentage || 0
-  const hasDiscount = discount > 0
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [currentImg, setCurrentImg] = useState(0);
+
+  const discount = product.discountPercentage || 0;
+  const hasDiscount = discount > 0;
 
   return (
     <div className="group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
@@ -25,7 +25,7 @@ export default function ProductCard({ product, onAdd }: Props) {
             -{discount.toFixed(0)}% OFF
           </div>
         )}
-        
+
         {/* Rating Badge */}
         <div className="absolute top-3 right-3 bg-white/90 backdrop-blur px-2 py-1 rounded-lg text-xs font-semibold z-10 shadow-lg flex items-center gap-1">
           <span className="text-yellow-500">★</span>
@@ -37,7 +37,7 @@ export default function ProductCard({ product, onAdd }: Props) {
           src={product.images?.[currentImg] || product.thumbnail}
           alt={product.title}
           className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ${
-            imgLoaded ? 'opacity-100' : 'opacity-0'
+            imgLoaded ? "opacity-100" : "opacity-0"
           }`}
           onLoad={() => setImgLoaded(true)}
         />
@@ -56,8 +56,8 @@ export default function ProductCard({ product, onAdd }: Props) {
                 onClick={() => setCurrentImg(idx)}
                 className={`w-2 h-2 rounded-full transition-all ${
                   currentImg === idx
-                    ? 'bg-white w-6'
-                    : 'bg-white/60 hover:bg-white/80'
+                    ? "bg-white w-6"
+                    : "bg-white/60 hover:bg-white/80"
                 }`}
                 aria-label={`View image ${idx + 1}`}
               />
@@ -66,8 +66,7 @@ export default function ProductCard({ product, onAdd }: Props) {
         )}
 
         {/* Quick View Overlay */}
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-        </div>
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"></div>
       </div>
 
       {/* Content */}
@@ -108,12 +107,14 @@ export default function ProductCard({ product, onAdd }: Props) {
               )}
             </div>
           </div>
-          
+
           <div className="text-xs">
             {product.stock > 10 ? (
               <span className="text-green-600 font-medium">In Stock</span>
             ) : product.stock > 0 ? (
-              <span className="text-orange-600 font-medium">Only {product.stock} left</span>
+              <span className="text-orange-600 font-medium">
+                Only {product.stock} left
+              </span>
             ) : (
               <span className="text-red-600 font-medium">Out of Stock</span>
             )}
@@ -126,13 +127,13 @@ export default function ProductCard({ product, onAdd }: Props) {
           disabled={product.stock === 0}
           className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 ${
             product.stock === 0
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              : 'bg-linear-to-r from-[#755757] to-[#5a4242] text-white hover:bg-[#755757] hover:shadow-lg active:scale-95'
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-linear-to-r from-[#755757] to-[#5a4242] text-white hover:bg-[#755757] hover:shadow-lg active:scale-95"
           }`}
         >
-          {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+          {product.stock === 0 ? "Out of Stock" : "Add to Cart"}
         </button>
       </div>
     </div>
-  )
+  );
 }

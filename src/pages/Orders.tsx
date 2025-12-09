@@ -1,5 +1,3 @@
-// src/pages/Orders.tsx
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -15,7 +13,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { fetchOrders } from "../services/mockApi";
-import type { Order } from "../types";
+import type { Order } from "../types/index";
 
 export default function Orders() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -118,7 +116,7 @@ export default function Orders() {
             className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all overflow-hidden"
           >
             {/* Order Header */}
-            <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 border-b">
+            <div className="bg-linear-to-r from-blue-50 to-blue-100 p-6 border-b">
               <div className="flex flex-wrap gap-4 justify-between items-start">
                 <div>
                   <p className="text-sm text-gray-600 mb-1">Order ID</p>
@@ -161,7 +159,7 @@ export default function Orders() {
                     className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
                   >
                     {/* Product Image */}
-                    <div className="w-16 h-16 flex-shrink-0">
+                    <div className="w-16 h-16 flex-0">
                       {item.thumbnail ? (
                         <img
                           src={item.thumbnail}
@@ -249,7 +247,7 @@ export default function Orders() {
 
       {/* Order Stats */}
       <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6">
+        <div className="bg-linear-to-br from-blue-50 to-blue-100 rounded-xl p-6">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
               <Package className="w-6 h-6 text-white" />
@@ -263,7 +261,7 @@ export default function Orders() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6">
+        <div className="bg-linear-to-br from-green-50 to-green-100 rounded-xl p-6">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
               <DollarSign className="w-6 h-6 text-white" />
@@ -277,7 +275,7 @@ export default function Orders() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6">
+        <div className="bg-linear-to-br from-purple-50 to-purple-100 rounded-xl p-6">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center">
               <Star className="w-6 h-6 text-white" />

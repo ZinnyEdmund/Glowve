@@ -18,7 +18,7 @@ import {
 import { useCart } from "../context/CardContext";
 import { useAuth } from "../context/AuthContext";
 import { placeOrder } from "../services/mockApi";
-import type { Order } from "../types";
+import type { Order } from "../types/index";
 
 export default function Cart() {
   const { cart, removeFromCart, updateQuantity, clearCart, cartTotal } =
@@ -55,6 +55,24 @@ export default function Cart() {
         items: cart,
         total,
         status: "pending",
+        userEmail: "",
+        shippingAddress: {
+          fullName: "",
+          email: "",
+          phone: "",
+          address: "",
+          city: "",
+          state: "",
+          zipCode: "",
+          country: ""
+        },
+        paymentMethod: "card",
+        subtotal: 0,
+        shipping: 0,
+        tax: 0,
+        paymentStatus: "pending",
+        createdAt: "",
+        updatedAt: ""
       };
 
       await placeOrder(order);
