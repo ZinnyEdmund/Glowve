@@ -1,36 +1,47 @@
 // src/pages/Orders.tsx
 
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { Package, ShoppingBag, DollarSign, Star, Truck, CheckCircle, Clock, FileText, Eye, Loader2 } from 'lucide-react'
-import { fetchOrders } from '../api/mockApi'
-import type { Order } from '../types'
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import {
+  Package,
+  ShoppingBag,
+  DollarSign,
+  Star,
+  Truck,
+  CheckCircle,
+  Clock,
+  FileText,
+  Eye,
+  Loader2,
+} from "lucide-react";
+import { fetchOrders } from "../services/mockApi";
+import type { Order } from "../types";
 
 export default function Orders() {
-  const [orders, setOrders] = useState<Order[]>([])
-  const [loading, setLoading] = useState(true)
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadOrders() {
       try {
-        const data = await fetchOrders()
-        console.log('Loaded orders:', data) // Debug log
-        setOrders(data)
+        const data = await fetchOrders();
+        console.log("Loaded orders:", data); // Debug log
+        setOrders(data);
       } catch (error) {
-        console.error('Error loading orders:', error)
+        console.error("Error loading orders:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
-    loadOrders()
-  }, [])
+    loadOrders();
+  }, []);
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
       </div>
-    )
+    );
   }
 
   // Empty state
@@ -41,9 +52,12 @@ export default function Orders() {
           <div className="w-32 h-32 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
             <Package className="w-16 h-16 text-gray-400" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">No Orders Yet</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-3">
+            No Orders Yet
+          </h2>
           <p className="text-gray-600 mb-8 max-w-md mx-auto">
-            You haven't placed any orders yet. Start shopping to see your orders here!
+            You haven't placed any orders yet. Start shopping to see your orders
+            here!
           </p>
           <Link
             to="/products"
@@ -54,30 +68,37 @@ export default function Orders() {
           </Link>
         </div>
       </div>
-    )
+    );
   }
 
   // Get status styles and icons
   const getStatusStyle = (status: string) => {
     const styles = {
-      pending: 'bg-yellow-100 text-yellow-800',
-      shipped: 'bg-blue-100 text-blue-800',
-      delivered: 'bg-green-100 text-green-800',
-      completed: 'bg-green-100 text-green-800',
-    }
-    return styles[status.toLowerCase() as keyof typeof styles] || 'bg-gray-100 text-gray-800'
-  }
+      pending: "bg-yellow-100 text-yellow-800",
+      shipped: "bg-blue-100 text-blue-800",
+      delivered: "bg-green-100 text-green-800",
+      completed: "bg-green-100 text-green-800",
+    };
+    return (
+      styles[status.toLowerCase() as keyof typeof styles] ||
+      "bg-gray-100 text-gray-800"
+    );
+  };
 
   const getStatusIcon = (status: string) => {
-    const iconClass = "w-4 h-4"
+    const iconClass = "w-4 h-4";
     const icons = {
       pending: <Clock className={iconClass} />,
       shipped: <Truck className={iconClass} />,
       delivered: <CheckCircle className={iconClass} />,
       completed: <CheckCircle className={iconClass} />,
-    }
-    return icons[status.toLowerCase() as keyof typeof icons] || <Package className={iconClass} />
-  }
+    };
+    return (
+      icons[status.toLowerCase() as keyof typeof icons] || (
+        <Package className={iconClass} />
+      )
+    );
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -85,7 +106,7 @@ export default function Orders() {
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-2">My Orders</h1>
         <p className="text-gray-600">
-          You have {orders.length} {orders.length === 1 ? 'order' : 'orders'}
+          You have {orders.length} {orders.length === 1 ? "order" : "orders"}
         </p>
       </div>
 
@@ -197,7 +218,9 @@ export default function Orders() {
                   </div>
                   <div className="flex justify-between text-lg font-bold text-gray-900 pt-2 border-t">
                     <span>Total:</span>
-                    <span className="text-green-600">${order.total.toFixed(2)}</span>
+                    <span className="text-green-600">
+                      ${order.total.toFixed(2)}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -212,7 +235,7 @@ export default function Orders() {
                   <Eye className="w-4 h-4" />
                   View Invoice
                 </button>
-                {order.status.toLowerCase() === 'delivered' && (
+                {order.status.toLowerCase() === "delivered" && (
                   <button className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold">
                     <Star className="w-4 h-4" />
                     Leave Review
@@ -233,7 +256,9 @@ export default function Orders() {
             </div>
             <div>
               <p className="text-sm text-gray-600">Total Orders</p>
-              <p className="text-2xl font-bold text-gray-900">{orders.length}</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {orders.length}
+              </p>
             </div>
           </div>
         </div>
@@ -267,5 +292,5 @@ export default function Orders() {
         </div>
       </div>
     </div>
-  )
+  );
 }

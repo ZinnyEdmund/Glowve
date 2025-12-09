@@ -23,6 +23,9 @@ export default function Profile() {
   if (!user) return null
 
   async function save() {
+    // Guard against user being null so TypeScript can narrow the type....omoooo
+    if (!user) return
+
     setSaving(true)
     await new Promise(res => setTimeout(res, 500))
     
@@ -31,7 +34,8 @@ export default function Profile() {
       if (!raw) return
       
       const db = JSON.parse(raw)
-      db.users[user.email] = { ...db.users[user.email], ...form }
+      const email = user.email
+      db.users[email] = { ...db.users[email], ...form }
       
       localStorage.setItem('malli_mock_db_v1', JSON.stringify(db))
       localStorage.setItem('malli_user_v1', JSON.stringify(form))

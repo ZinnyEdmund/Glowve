@@ -7,7 +7,7 @@ import { Search, X } from 'lucide-react';
 
 export default function Products() {
   const { products, loading, error } = useProducts()
-  const { addToCart, cartCount, cartTotal } = useCart()
+  const { addToCart, cartCount } = useCart()
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<'default' | 'price-low' | 'price-high' | 'rating'>('default')
@@ -184,10 +184,6 @@ export default function Products() {
           <div className="flex items-center gap-3">
             <div className="bg-white text-black w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg">
               {cartCount}
-            </div>
-            <div>
-              <p className="font-semibold">Cart Total</p>
-              <p className="text-xl font-bold">${cartTotal.toFixed(2)}</p>
             </div>
           </div>
         </div>

@@ -1,38 +1,51 @@
 // src/pages/Cart.tsx
 
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { ShoppingCart, Plus, Minus, Trash2, ShoppingBag, CheckCircle, Shield, RotateCcw, Loader2, Package, AlertCircle } from 'lucide-react'
-import { useCart } from '../context/CardContext'
-import { useAuth } from '../context/AuthContext'
-import { placeOrder } from '../api/mockApi'
-import type { Order } from '../types'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  ShoppingCart,
+  Plus,
+  Minus,
+  Trash2,
+  ShoppingBag,
+  CheckCircle,
+  Shield,
+  RotateCcw,
+  Loader2,
+  Package,
+  AlertCircle,
+} from "lucide-react";
+import { useCart } from "../context/CardContext";
+import { useAuth } from "../context/AuthContext";
+import { placeOrder } from "../services/mockApi";
+import type { Order } from "../types";
 
 export default function Cart() {
-  const { cart, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart()
-  const { user } = useAuth()
-  const navigate = useNavigate()
-  const [placing, setPlacing] = useState(false)
-  const [showSuccess, setShowSuccess] = useState(false)
+  const { cart, removeFromCart, updateQuantity, clearCart, cartTotal } =
+    useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [placing, setPlacing] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  const subtotal = cartTotal
-  const shipping = subtotal > 50 ? 0 : 10
-  const tax = (subtotal + shipping) * 0.1
-  const total = subtotal + shipping + tax
+  const subtotal = cartTotal;
+  const shipping = subtotal > 50 ? 0 : 10;
+  const tax = (subtotal + shipping) * 0.1;
+  const total = subtotal + shipping + tax;
 
   async function handlePlaceOrder() {
     if (!user) {
-      alert('Please login first')
-      navigate('/login')
-      return
+      alert("Please login first");
+      navigate("/login");
+      return;
     }
 
     if (cart.length === 0) {
-      alert('Your cart is empty')
-      return
+      alert("Your cart is empty");
+      return;
     }
 
-    setPlacing(true)
+    setPlacing(true);
 
     try {
       const order: Order = {
@@ -41,29 +54,29 @@ export default function Cart() {
         date: new Date().toLocaleString(),
         items: cart,
         total,
-        status: 'pending',
-      }
+        status: "pending",
+      };
 
-      await placeOrder(order)
-      setShowSuccess(true)
-      
+      await placeOrder(order);
+      setShowSuccess(true);
+
       // Clear cart and redirect after 2 seconds
       setTimeout(() => {
-        clearCart()
-        navigate('/orders')
-      }, 2000)
+        clearCart();
+        navigate("/orders");
+      }, 2000);
     } catch (error) {
-      alert('Failed to place order. Please try again.')
-      console.error(error)
+      alert("Failed to place order. Please try again.");
+      console.error(error);
     } finally {
-      setPlacing(false)
+      setPlacing(false);
     }
   }
 
   function handleQuantityChange(id: number, value: string) {
-    const quantity = parseInt(value)
+    const quantity = parseInt(value);
     if (!isNaN(quantity) && quantity > 0) {
-      updateQuantity(id, quantity)
+      updateQuantity(id, quantity);
     }
   }
 
@@ -75,16 +88,19 @@ export default function Cart() {
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="w-12 h-12 text-green-600" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Order Placed!</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            Order Placed!
+          </h2>
           <p className="text-gray-600 mb-4">
-            Your order has been successfully placed. Redirecting to orders page...
+            Your order has been successfully placed. Redirecting to orders
+            page...
           </p>
           <div className="flex justify-center">
             <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   // For Empty Cart State
@@ -95,9 +111,12 @@ export default function Cart() {
           <div className="w-32 h-32 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
             <ShoppingCart className="w-16 h-16 text-gray-400" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">Your Cart is Empty</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-3">
+            Your Cart is Empty
+          </h2>
           <p className="text-gray-600 mb-8 max-w-md mx-auto">
-            Looks like you haven't added anything to your cart yet. Start shopping to fill it up!
+            Looks like you haven't added anything to your cart yet. Start
+            shopping to fill it up!
           </p>
           <Link
             to="/products"
@@ -108,7 +127,7 @@ export default function Cart() {
           </Link>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -120,7 +139,7 @@ export default function Cart() {
           Shopping Cart
         </h1>
         <p className="text-gray-600">
-          {cart.length} {cart.length === 1 ? 'item' : 'items'} in your cart
+          {cart.length} {cart.length === 1 ? "item" : "items"} in your cart
         </p>
       </div>
 
@@ -154,7 +173,7 @@ export default function Cart() {
                     {item.title}
                   </h3>
                   {item.brand && (
-                    <p className="text-sm text-blue-600 font-semibold mb-2">
+                    <p className="text-sm text-zinc-900 font-semibold mb-2">
                       {item.brand}
                     </p>
                   )}
@@ -162,10 +181,14 @@ export default function Cart() {
 
                   {/* Quantity Controls */}
                   <div className="flex items-center gap-3">
-                    <label className="text-sm font-semibold text-gray-700">Qty:</label>
+                    <label className="text-sm font-semibold text-gray-700">
+                      Qty:
+                    </label>
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity - 1)
+                        }
                         className="w-8 h-8 rounded-lg bg-gray-200 hover:bg-gray-300 flex items-center justify-center font-bold transition"
                       >
                         <Minus className="w-4 h-4" />
@@ -175,11 +198,15 @@ export default function Cart() {
                         min="1"
                         max={item.stock}
                         value={item.quantity}
-                        onChange={(e) => handleQuantityChange(item.id, e.target.value)}
+                        onChange={(e) =>
+                          handleQuantityChange(item.id, e.target.value)
+                        }
                         className="w-16 text-center border border-gray-300 rounded-lg px-2 py-1 font-semibold"
                       />
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity + 1)
+                        }
                         disabled={item.quantity >= item.stock}
                         className="w-8 h-8 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-bold transition"
                       >
@@ -211,7 +238,7 @@ export default function Cart() {
                     ${item.price.toFixed(2)}
                   </p>
                   <p className="text-sm text-gray-600 mt-3">Subtotal</p>
-                  <p className="text-2xl font-bold text-blue-600">
+                  <p className="text-2xl font-bold text-green-600">
                     ${(item.price * item.quantity).toFixed(2)}
                   </p>
                 </div>
@@ -257,7 +284,9 @@ export default function Cart() {
               {subtotal < 50 && shipping > 0 && (
                 <p className="text-xs text-orange-600 bg-orange-50 p-2 rounded flex items-start gap-2">
                   <AlertCircle className="w-4 h-4 flex-0 mt-0.5" />
-                  <span>Add ${(50 - subtotal).toFixed(2)} more for free shipping!</span>
+                  <span>
+                    Add ${(50 - subtotal).toFixed(2)} more for free shipping!
+                  </span>
                 </p>
               )}
 
@@ -268,7 +297,7 @@ export default function Cart() {
 
               <div className="border-t pt-4 flex justify-between text-xl font-bold">
                 <span>Total</span>
-                <span className="text-blue-600">${total.toFixed(2)}</span>
+                <span className="text-green-600">${total.toFixed(2)}</span>
               </div>
             </div>
 
@@ -293,10 +322,13 @@ export default function Cart() {
 
             {!user && (
               <p className="text-xs text-center text-gray-600 mt-3">
-                Please{' '}
-                <Link to="/login" className="text-blue-600 font-semibold hover:underline">
+                Please{" "}
+                <Link
+                  to="/login"
+                  className="text-blue-600 font-semibold hover:underline"
+                >
                   login
-                </Link>{' '}
+                </Link>{" "}
                 to place an order
               </p>
             )}
@@ -320,5 +352,5 @@ export default function Cart() {
         </div>
       </div>
     </div>
-  )
+  );
 }
