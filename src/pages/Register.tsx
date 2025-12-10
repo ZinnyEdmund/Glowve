@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react'
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -21,7 +21,7 @@ export default function Register() {
     setError('')
 
     if (!form.name || !form.email || !form.password) {
-      setError('All fields required')
+      setError('Please fill in all fields')
       return
     }
 
@@ -36,15 +36,16 @@ export default function Register() {
     }
 
     setLoading(true)
+
     try {
       await register(form.name, form.email, form.password)
-      alert('Account created! Please login.')
+      alert('Account created! You can now log in.')
       nav('/login')
     } catch (err: unknown) {
-      if (err instanceof Error){
+      if (err instanceof Error) {
         setError(err.message)
       } else {
-        setError('Registration failed')
+        setError('Something went wrong. Please try again.')
       }
     } finally {
       setLoading(false)
@@ -52,70 +53,122 @@ export default function Register() {
   }
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded shadow mt-10">
-      <h2 className="text-xl font-bold mb-4 text-center">Create Account</h2>
-
-      <form onSubmit={submit} className="space-y-3">
-        <input
-          type="text"
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-          placeholder="Full Name"
-          className="w-full border px-3 py-2 rounded"
-          required
-        />
-
-        <input
-          type="email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          placeholder="Email"
-          className="w-full border px-3 py-2 rounded"
-          required
-        />
-
-        <div className="relative">
-          <input
-            type={showPassword ? 'text' : 'password'}
-            value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-            placeholder="Password"
-            className="w-full border px-3 py-2 rounded"
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-2.5"
-          >
-            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-          </button>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
+      <div className="max-w-md w-full">
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-bold text-gray-900">Create an account</h1>
+          <p className="text-gray-600 mt-2">Get started with your free account</p>
         </div>
 
-        <input
-          type="password"
-          value={form.confirm}
-          onChange={(e) => setForm({ ...form, confirm: e.target.value })}
-          placeholder="Confirm Password"
-          className="w-full border px-3 py-2 rounded"
-          required
-        />
+        <div className="bg-white rounded-lg shadow p-8">
+          <form onSubmit={submit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Full name
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-focus:ring-[#755757] focus:border-transparent"
+                  placeholder="Enter your name"
+                  required
+                />
+              </div>
+            </div>
 
-        {error && <p className="text-red-600 text-sm">{error}</p>}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Email
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-focus:ring-[#755757] focus:border-transparent"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+            </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white px-3 py-2 rounded font-bold disabled:bg-gray-400"
-        >
-          {loading ? 'Creating account...' : 'Create Account'}
-        </button>
-      </form>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  className="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-focus:ring-[#755757] focus:border-transparent"
+                  placeholder="Enter your password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+              {form.password && form.password.length < 6 && (
+                <p className="text-xs text-gray-focus:ring-[#755757] mt-1">Must be at least 6 characters</p>
+              )}
+            </div>
 
-      <p className="text-center mt-4 text-sm">
-        Already have an account?{' '}
-        <a href="/login" className="text-blue-600 font-bold">Login</a>
-      </p>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Confirm password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                <input
+                  type="password"
+                  value={form.confirm}
+                  onChange={(e) => setForm({ ...form, confirm: e.target.value })}
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-focus:ring-[#755757] focus:border-transparent"
+                  placeholder="Confirm your password"
+                  required
+                />
+              </div>
+            </div>
+
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-black hover:bg-zinc-800 text-white py-2.5 rounded-md font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Creating account...' : 'Create account'}
+            </button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-900">
+              Already have an account?{' '}
+              <Link to="/login" className="text-black underline hover:text-zinc-800 font-bold">
+                Sign in
+              </Link>
+            </p>
+          </div>
+        </div>
+
+        <p className="text-center text-xs text-gray-focus:ring-[#755757] mt-6">
+          By signing up, you agree to our Terms and Privacy Policy
+        </p>
+      </div>
     </div>
   )
 }

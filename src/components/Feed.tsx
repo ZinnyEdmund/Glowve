@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+// import { ArrowRight } from "lucide-react";
 import { memo } from "react";
 import type { FC } from "react";
 
@@ -18,12 +18,12 @@ const INSTAGRAM_POSTS: InstaPost[] = [
 ];
 
 const InstagramFeed: FC = memo(() => (
-  <section className="py-20 bg-white">
+  <section className="py-20">
     <div className="max-w-7xl mx-auto px-4">
       <div className="text-center mb-14 space-y-3">
-        <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+        <h2 className="text-4xl md:text-5xl font-bold text-black">
           Follow Us{" "}
-          <span className="bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">@glowve</span>
+          <span className="bg-linear-to-r from-[#755757eb] to-[#785454dd] bg-clip-text text-transparent">@glowve</span>
         </h2>
         <p className="text-gray-600 text-lg">Join our community and share your style</p>
       </div>
@@ -51,7 +51,7 @@ const InstagramFeed: FC = memo(() => (
         ))}
       </div>
 
-      <div className="text-center mt-12">
+      {/* <div className="text-center mt-12">
         <a
           href="#instagram"
           className="inline-flex items-center gap-2 text-[#755757] font-semibold text-lg hover:gap-3 transition-all group"
@@ -59,7 +59,7 @@ const InstagramFeed: FC = memo(() => (
           View More on Instagram
           <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
         </a>
-      </div>
+      </div> */}
     </div>
   </section>
 ));

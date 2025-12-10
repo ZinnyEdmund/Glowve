@@ -1,6 +1,7 @@
 import { ArrowRight, Sparkles } from "lucide-react";
 import { memo } from "react";
 import type { FC } from "react";
+import { Link } from "react-router-dom";
 
 const PromoBanner: FC = memo(() => (
   <section className="py-20 px-4">
@@ -15,7 +16,7 @@ const PromoBanner: FC = memo(() => (
               Limited Time Offer
             </span>
 
-            <h2 className="text-4xl lg:text-6xl font-bold leading-tight">
+            <h2 className="text-3xl lg:text-5xl font-bold leading-tight">
               Summer
               <br />
               <span className="bg-linear-to-r from-yellow-200 to-pink-200 bg-clip-text text-transparent">
@@ -27,13 +28,13 @@ const PromoBanner: FC = memo(() => (
               Get up to 40% off on selected items. Elevate your style with our curated summer essentials.
             </p>
 
-            <a
-              href="#sale"
+            <Link
+              to="/products"
               className="inline-flex items-center gap-3 bg-white text-[#755757] px-8 py-4 rounded-xl font-bold hover:bg-gray-100 hover:scale-105 transition-all shadow-xl group"
             >
               Shop Now
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-            </a>
+            </Link>
           </div>
 
           <div className="relative h-full min-h-[400px] flex items-center justify-center">
