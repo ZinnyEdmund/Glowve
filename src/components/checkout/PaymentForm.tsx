@@ -91,7 +91,7 @@ export default function PaymentForm({
               }
               placeholder="1234 5678 9012 3456"
               maxLength={19}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#755757] outline-none"
               required
             />
           </div>
@@ -109,7 +109,7 @@ export default function PaymentForm({
                 }
                 placeholder="MM/YY"
                 maxLength={5}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#755757] outline-none"
                 required
               />
             </div>
@@ -126,7 +126,7 @@ export default function PaymentForm({
                 }
                 placeholder="123"
                 maxLength={4}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#755757] outline-none"
                 required
               />
             </div>
@@ -143,7 +143,7 @@ export default function PaymentForm({
                 setCardDetails({ ...cardDetails, name: e.target.value })
               }
               placeholder="JOHN DOE"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#755757] outline-none"
               required
             />
           </div>

@@ -171,8 +171,8 @@ export default function Products() {
               setSearchQuery('')
               setSelectedCategory('all')
             }}
-            className="text-blue-600 hover:text-blue-700 font-semibold"
-          >
+            className="text-[#382a2a] hover:text-[#755757]  font-semibold"
+            >
             Clear all filters
           </button>
         </div>

@@ -137,7 +137,7 @@ export default function Profile() {
                   type="text"
                   value={form?.name || ''}
                   onChange={e => setForm({ ...form!, name: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#755757]"
                   placeholder="Enter your full name"
                 />
               ) : (
@@ -169,7 +169,7 @@ export default function Profile() {
                   type="tel"
                   value={form?.phone || ''}
                   onChange={e => setForm({ ...form!, phone: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#755757]"
                   placeholder="Enter your phone number"
                 />
               ) : (
@@ -190,7 +190,7 @@ export default function Profile() {
                   type="text"
                   value={form?.address || ''}
                   onChange={e => setForm({ ...form!, address: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#755757]"
                   placeholder="Enter your address"
                 />
               ) : (
@@ -213,7 +213,7 @@ export default function Profile() {
                     type="text"
                     value={form?.city || ''}
                     onChange={e => setForm({ ...form!, city: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#755757]"
                     placeholder="Enter your city"
                   />
                 ) : (
@@ -234,7 +234,7 @@ export default function Profile() {
                     type="text"
                     value={form?.zipCode || ''}
                     onChange={e => setForm({ ...form!, zipCode: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#755757]"
                     placeholder="Enter zip code"
                   />
                 ) : (

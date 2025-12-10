@@ -72,7 +72,7 @@ export default function Register() {
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-focus:ring-[#755757] focus:border-transparent"
                   placeholder="Enter your name"
                   required
                 />
@@ -89,7 +89,7 @@ export default function Register() {
                   type="email"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-focus:ring-[#755757] focus:border-transparent"
                   placeholder="Enter your email"
                   required
                 />
@@ -106,7 +106,7 @@ export default function Register() {
                   type={showPassword ? 'text' : 'password'}
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-focus:ring-[#755757] focus:border-transparent"
                   placeholder="Enter your password"
                   required
                 />
@@ -119,7 +119,7 @@ export default function Register() {
                 </button>
               </div>
               {form.password && form.password.length < 6 && (
-                <p className="text-xs text-gray-500 mt-1">Must be at least 6 characters</p>
+                <p className="text-xs text-gray-focus:ring-[#755757] mt-1">Must be at least 6 characters</p>
               )}
             </div>
 
@@ -133,7 +133,7 @@ export default function Register() {
                   type="password"
                   value={form.confirm}
                   onChange={(e) => setForm({ ...form, confirm: e.target.value })}
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-focus:ring-[#755757] focus:border-transparent"
                   placeholder="Confirm your password"
                   required
                 />
@@ -165,7 +165,7 @@ export default function Register() {
           </div>
         </div>
 
-        <p className="text-center text-xs text-gray-500 mt-6">
+        <p className="text-center text-xs text-gray-focus:ring-[#755757] mt-6">
           By signing up, you agree to our Terms and Privacy Policy
         </p>
       </div>

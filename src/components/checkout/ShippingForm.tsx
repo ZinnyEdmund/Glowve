@@ -65,7 +65,7 @@ export default function ShippingForm({ initialData, onSubmit, onBack }: Props) {
           type="text"
           value={formData.fullName}
           onChange={e => handleChange('fullName', e.target.value)}
-          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition ${
+          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#755757] outline-none transition ${
             errors.fullName ? 'border-red-500' : 'border-gray-300'
           }`}
           placeholder="John Doe"
@@ -83,7 +83,7 @@ export default function ShippingForm({ initialData, onSubmit, onBack }: Props) {
             type="email"
             value={formData.email}
             onChange={e => handleChange('email', e.target.value)}
-            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition ${
+            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#755757] outline-none transition ${
               errors.email ? 'border-red-500' : 'border-gray-300'
             }`}
             placeholder="john@example.com"
@@ -99,7 +99,7 @@ export default function ShippingForm({ initialData, onSubmit, onBack }: Props) {
             type="tel"
             value={formData.phone}
             onChange={e => handleChange('phone', e.target.value)}
-            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition ${
+            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#755757] outline-none transition ${
               errors.phone ? 'border-red-500' : 'border-gray-300'
             }`}
             placeholder="+234 800 000 0000"
@@ -117,7 +117,7 @@ export default function ShippingForm({ initialData, onSubmit, onBack }: Props) {
           type="text"
           value={formData.address}
           onChange={e => handleChange('address', e.target.value)}
-          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition ${
+          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#755757] outline-none transition ${
             errors.address ? 'border-red-500' : 'border-gray-300'
           }`}
           placeholder="123 Main Street"
@@ -135,7 +135,7 @@ export default function ShippingForm({ initialData, onSubmit, onBack }: Props) {
             type="text"
             value={formData.city}
             onChange={e => handleChange('city', e.target.value)}
-            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition ${
+            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#755757] outline-none transition ${
               errors.city ? 'border-red-500' : 'border-gray-300'
             }`}
             placeholder="Lagos"
@@ -150,7 +150,7 @@ export default function ShippingForm({ initialData, onSubmit, onBack }: Props) {
           <select
             value={formData.state}
             onChange={e => handleChange('state', e.target.value)}
-            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition ${
+            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#755757] outline-none transition ${
               errors.state ? 'border-red-500' : 'border-gray-300'
             }`}
           >
@@ -170,7 +170,7 @@ export default function ShippingForm({ initialData, onSubmit, onBack }: Props) {
             type="text"
             value={formData.zipCode}
             onChange={e => handleChange('zipCode', e.target.value)}
-            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition ${
+            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#755757] outline-none transition ${
               errors.zipCode ? 'border-red-500' : 'border-gray-300'
             }`}
             placeholder="100001"
@@ -187,7 +187,7 @@ export default function ShippingForm({ initialData, onSubmit, onBack }: Props) {
         <select
           value={formData.country}
           onChange={e => handleChange('country', e.target.value)}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#755757] outline-none transition"
         >
           {COUNTRIES.map(country => (
             <option key={country} value={country}>{country}</option>
@@ -208,7 +208,7 @@ export default function ShippingForm({ initialData, onSubmit, onBack }: Props) {
         )}
         <button
           type="submit"
-          className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
+          className="flex-1 px-6 py-3 bg-linear-to-r from-[#755757] to-[#5a4242] text-white rounded-lg hover:bg-[#382a2a] transition font-semibold"
         >
           Continue to Payment →
         </button>

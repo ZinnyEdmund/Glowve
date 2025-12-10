@@ -74,7 +74,7 @@ export default function ProductCard({ product, onAdd }: Props) {
         {/* Brand & Category */}
         <div className="flex items-center gap-2 mb-2">
           {product.brand && (
-            <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide">
+            <span className="text-xs font-semibold text-[#6d2929]  uppercase tracking-wide">
               {product.brand}
             </span>
           )}

@@ -36,7 +36,7 @@ export default function Cart() {
         </p>
         <Link
           to="/products"
-          className="inline-block px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold text-lg"
+          className="inline-block px-8 py-4 bg-linear-to-r from-[#755757] to-[#5a4242] text-white rounded-lg hover:bg-[#382a2a]  transition font-semibold text-lg"
         >
           Start Shopping
         </Link>
@@ -104,8 +104,8 @@ export default function Cart() {
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
                         disabled={item.quantity >= item.stock}
-                        className="w-8 h-8 rounded-lg bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center font-bold transition disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
+                        className="w-8 h-8 rounded-lg bg-[#755757] hover:bg-b[#382a2a] text-white flex items-center justify-center font-bold transition disabled:opacity-50 disabled:cursor-not-allowed"
+                      > 
                         +
                       </button>
                       <span className="text-sm text-gray-600 ml-2">
@@ -155,20 +155,20 @@ export default function Cart() {
               {!isFreeShipping && (
                 <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-semibold text-blue-900">
+                    <span className="text-sm font-semibold text-black">
                       Free Shipping Progress
                     </span>
-                    <span className="text-sm font-bold text-blue-600">
+                    <span className="text-sm font-bold text-black">
                       {Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 100)}%
                     </span>
                   </div>
                   <div className="w-full bg-blue-200 rounded-full h-2 mb-2">
                     <div
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      className="bg-black h-2 rounded-full transition-all duration-300"
                       style={{ width: `${Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100)}%` }}
                     />
                   </div>
-                  <p className="text-xs text-blue-700">
+                  <p className="text-xs text-black">
                     Add {formatCurrency(FREE_SHIPPING_THRESHOLD - subtotal)} more for free shipping!
                   </p>
                 </div>

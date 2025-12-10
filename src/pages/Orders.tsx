@@ -37,7 +37,7 @@ export default function Orders() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
+        <Loader2 className="w-12 h-12 text-[#755757] animate-spin" />
       </div>
     );
   }
