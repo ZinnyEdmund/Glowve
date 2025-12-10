@@ -2,8 +2,15 @@ import { useState } from 'react'
 import type { PaymentMethod } from '../../types'
 import { PAYMENT_METHODS } from '../../utils/constants'
 
+type CardDetails = {
+  number: string
+  expiry: string
+  cvc: string
+  name: string
+}
+
 type Props = {
-  onSubmit: (method: PaymentMethod, cardDetails?: any) => void
+  onSubmit: (method: PaymentMethod, cardDetails?: CardDetails) => void
   onBack: () => void
   processing?: boolean
 }

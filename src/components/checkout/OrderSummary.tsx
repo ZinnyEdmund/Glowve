@@ -1,6 +1,6 @@
 import type { CartItem } from '../../types'
 import { formatCurrency } from '../../utils/formatters'
-import { SHIPPING_COST, FREE_SHIPPING_THRESHOLD } from '../../utils/constants'
+import {  FREE_SHIPPING_THRESHOLD } from '../../utils/constants'
 
 type Props = {
   items: CartItem[]

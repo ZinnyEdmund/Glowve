@@ -1,4 +1,3 @@
-// src/App.tsx
 import { Routes, Route } from "react-router-dom"
 import MainLayout from "./layouts/MainLayout"
 import AuthLayout from "./layouts/AuthLayout"
@@ -7,9 +6,14 @@ import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Profile from "./pages/Profile"
 import Orders from "./pages/Orders"
+import OrderDetails from "./pages/OrderDetails"
 import Analytics from "./pages/Analytics"
 import Cart from "./pages/Cart"
+import Checkout from "./pages/Checkout"
+import PaymentSuccess from "./pages/PaymentSuccess"
+import PaymentFailed from "./pages/PaymentFailed"
 import Products from "./pages/Products"
+import VerifyPhone from "./pages/VerifyPhone"
 import ProtectedRoute from "./components/ProtectedRoute"
 
 export default function App() {
@@ -19,6 +23,9 @@ export default function App() {
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/verify-phone" element={<VerifyPhone />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/payment-failed" element={<PaymentFailed />} />
       </Route>
 
       {/* Main Routes - With Navbar/Footer */}
@@ -26,6 +33,15 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
         <Route path="/cart" element={<Cart />} />
+        
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/profile"
           element={
@@ -39,6 +55,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Orders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders/:orderId"
+          element={
+            <ProtectedRoute>
+              <OrderDetails />
             </ProtectedRoute>
           }
         />

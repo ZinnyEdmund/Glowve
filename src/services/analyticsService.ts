@@ -1,4 +1,4 @@
-import type { Order, AnalyticsData } from '../types/index'
+import type { Order, AnalyticsData } from '../types'
 
 export function calculateAnalytics(orders: Order[]): AnalyticsData {
   const totalRevenue = orders
