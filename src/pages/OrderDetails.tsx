@@ -4,6 +4,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useOrders } from '../context/OrderContext'
 import { formatCurrency, formatDateTime } from '../utils/formatters'
 import { ORDER_STATUS_COLORS, ORDER_STATUS_LABELS } from '../utils/constants'
+import { HelpCircle, ArrowLeft, Check, Mail, Phone } from 'lucide-react'
 
 export default function OrderDetails() {
   const { orderId } = useParams<{ orderId: string }>()
@@ -15,7 +16,7 @@ export default function OrderDetails() {
   if (!order) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center">
-        <div className="text-6xl mb-4">❓</div>
+        <HelpCircle className="w-24 h-24 mx-auto mb-4 text-gray-400" />
         <h1 className="text-2xl font-bold text-gray-900 mb-4">Order Not Found</h1>
         <p className="text-gray-600 mb-6">We couldn't find the order you're looking for.</p>
         <Link
@@ -36,7 +37,8 @@ export default function OrderDetails() {
           onClick={() => navigate('/orders')}
           className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold mb-4"
         >
-          ← Back to Orders
+          <ArrowLeft className="w-5 h-5" />
+          Back to Orders
         </button>
         <h1 className="text-4xl font-bold text-gray-900 mb-2">Order Details</h1>
         <p className="text-gray-600">Order ID: {order.id}</p>
@@ -57,7 +59,7 @@ export default function OrderDetails() {
                 {/* Order Placed */}
                 <div className="relative flex items-start gap-4">
                   <div className={`flex items-center justify-center w-8 h-8 rounded-full bg-green-500 text-white font-bold z-10`}>
-                    ✓
+                    <Check className="w-5 h-5" />
                   </div>
                   <div>
                     <p className="font-bold text-gray-900">Order Placed</p>
@@ -72,7 +74,11 @@ export default function OrderDetails() {
                       ? 'bg-green-500 text-white'
                       : 'bg-gray-300 text-gray-600'
                   } font-bold z-10`}>
-                    {['processing', 'shipped', 'delivered'].includes(order.status) ? '✓' : '2'}
+                    {['processing', 'shipped', 'delivered'].includes(order.status) ? (
+                      <Check className="w-5 h-5" />
+                    ) : (
+                      '2'
+                    )}
                   </div>
                   <div>
                     <p className="font-bold text-gray-900">Processing</p>
@@ -91,7 +97,11 @@ export default function OrderDetails() {
                       ? 'bg-green-500 text-white'
                       : 'bg-gray-300 text-gray-600'
                   } font-bold z-10`}>
-                    {['shipped', 'delivered'].includes(order.status) ? '✓' : '3'}
+                    {['shipped', 'delivered'].includes(order.status) ? (
+                      <Check className="w-5 h-5" />
+                    ) : (
+                      '3'
+                    )}
                   </div>
                   <div>
                     <p className="font-bold text-gray-900">Shipped</p>
@@ -110,7 +120,11 @@ export default function OrderDetails() {
                       ? 'bg-green-500 text-white'
                       : 'bg-gray-300 text-gray-600'
                   } font-bold z-10`}>
-                    {order.status === 'delivered' ? '✓' : '4'}
+                    {order.status === 'delivered' ? (
+                      <Check className="w-5 h-5" />
+                    ) : (
+                      '4'
+                    )}
                   </div>
                   <div>
                     <p className="font-bold text-gray-900">Delivered</p>
@@ -176,11 +190,11 @@ export default function OrderDetails() {
               <p className="text-gray-700">{order.shippingAddress.country}</p>
               <div className="mt-4 pt-4 border-t space-y-1">
                 <p className="text-gray-700 flex items-center gap-2">
-                  <span>📧</span>
+                  <Mail className="w-4 h-4" />
                   {order.shippingAddress.email}
                 </p>
                 <p className="text-gray-700 flex items-center gap-2">
-                  <span>📱</span>
+                  <Phone className="w-4 h-4" />
                   {order.shippingAddress.phone}
                 </p>
               </div>

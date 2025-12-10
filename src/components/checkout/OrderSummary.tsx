@@ -1,6 +1,7 @@
 import type { CartItem } from '../../types'
 import { formatCurrency } from '../../utils/formatters'
-import {  FREE_SHIPPING_THRESHOLD } from '../../utils/constants'
+import { FREE_SHIPPING_THRESHOLD } from '../../utils/constants'
+import { PartyPopper, Lightbulb, Lock } from 'lucide-react'
 
 type Props = {
   items: CartItem[]
@@ -62,7 +63,7 @@ export default function OrderSummary({ items, subtotal, shipping, tax, total }: 
 
         {isFreeShipping && (
           <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-            <span className="text-green-600">🎉</span>
+            <PartyPopper className="w-5 h-5 text-green-600 flex-0" />
             <p className="text-sm text-green-700 font-semibold">
               You qualified for free shipping!
             </p>
@@ -71,7 +72,7 @@ export default function OrderSummary({ items, subtotal, shipping, tax, total }: 
 
         {!isFreeShipping && subtotal > 0 && (
           <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <span className="text-blue-600">💡</span>
+            <Lightbulb className="w-5 h-5 text-blue-600 flex-0" />
             <p className="text-sm text-blue-700">
               Add {formatCurrency(FREE_SHIPPING_THRESHOLD - subtotal)} more for free shipping
             </p>
@@ -87,7 +88,7 @@ export default function OrderSummary({ items, subtotal, shipping, tax, total }: 
       {/* Security Badge */}
       <div className="mt-6 p-4 bg-white rounded-lg border border-gray-200">
         <div className="flex items-center gap-2 text-sm text-gray-600">
-          <span className="text-green-600">🔒</span>
+          <Lock className="w-4 h-4 text-green-600" />
           <span className="font-semibold">Secure Checkout</span>
         </div>
         <p className="text-xs text-gray-500 mt-1">

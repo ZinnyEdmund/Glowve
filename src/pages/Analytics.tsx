@@ -3,6 +3,7 @@ import { useOrders } from '../context/OrderContext'
 import { calculateAnalytics } from '../services/analyticsService'
 import { formatCurrency } from '../utils/formatters'
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { DollarSign, Package, Users, TrendingUp } from 'lucide-react'
 import Loader from '../components/common/Loader'
 
 const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899']
@@ -30,7 +31,7 @@ export default function Analytics() {
         <div className="bg-linear-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
           <div className="flex items-center justify-between mb-2">
             <p className="text-blue-100 text-sm font-semibold">Total Revenue</p>
-            <span className="text-3xl">💰</span>
+            <DollarSign className="w-8 h-8" />
           </div>
           <p className="text-4xl font-bold mb-1">{formatCurrency(analytics.totalRevenue)}</p>
           <p className="text-blue-100 text-sm">All time earnings</p>
@@ -40,7 +41,7 @@ export default function Analytics() {
         <div className="bg-linear-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg">
           <div className="flex items-center justify-between mb-2">
             <p className="text-green-100 text-sm font-semibold">Total Orders</p>
-            <span className="text-3xl">📦</span>
+            <Package className="w-8 h-8" />
           </div>
           <p className="text-4xl font-bold mb-1">{analytics.totalOrders}</p>
           <p className="text-green-100 text-sm">Orders placed</p>
@@ -50,7 +51,7 @@ export default function Analytics() {
         <div className="bg-linear-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white shadow-lg">
           <div className="flex items-center justify-between mb-2">
             <p className="text-purple-100 text-sm font-semibold">Customers</p>
-            <span className="text-3xl">👥</span>
+            <Users className="w-8 h-8" />
           </div>
           <p className="text-4xl font-bold mb-1">{analytics.totalCustomers}</p>
           <p className="text-purple-100 text-sm">Unique customers</p>
@@ -60,7 +61,7 @@ export default function Analytics() {
         <div className="bg-linear-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white shadow-lg">
           <div className="flex items-center justify-between mb-2">
             <p className="text-orange-100 text-sm font-semibold">Avg Order Value</p>
-            <span className="text-3xl">📊</span>
+            <TrendingUp className="w-8 h-8" />
           </div>
           <p className="text-4xl font-bold mb-1">{formatCurrency(analytics.averageOrderValue)}</p>
           <p className="text-orange-100 text-sm">Per order</p>

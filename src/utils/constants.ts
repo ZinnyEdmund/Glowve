@@ -1,3 +1,5 @@
+import { CreditCard, Building2, Landmark } from 'lucide-react'
+
 export const SHIPPING_COST = 15.00
 export const TAX_RATE = 0.08 // 8% tax
 export const FREE_SHIPPING_THRESHOLD = 100
@@ -19,9 +21,9 @@ export const ORDER_STATUS_COLORS = {
 }
 
 export const PAYMENT_METHODS = [
-  { id: 'card', name: 'Credit/Debit Card', icon: '💳' },
-  { id: 'paystack', name: 'Paystack', icon: '🏦' },
-  { id: 'bank_transfer', name: 'Bank Transfer', icon: '🏛️' }
+  { id: 'card', name: 'Credit/Debit Card', icon: CreditCard },
+  { id: 'paystack', name: 'Paystack', icon: Building2},
+  { id: 'bank_transfer', name: 'Bank Transfer', icon: Landmark }
 ]
 
 export const COUNTRIES = [
