@@ -1,36 +1,35 @@
 import { useEffect, useState, useMemo } from "react";
-// import hoodie from "/hoodie.jpg";
 import clo from "/clo.jpg";
 import makeup from "/makeup.jpg";
 import necklace from "/necklace.jpg";
 import skincare from "/skincare.jpg";
-// import skinny from "/skinny.jpg";
-// import fair from "/fair.jpg";
+// import whitelace from "/whitelace.jpg";
+// // import goldlace from "/goldlace.jpg";
 
 const SLIDES = [
-  {
-    image: clo,
-    text: "Style that speaks softly.",
-    description: "Timeless looks for every mood.",
-    alt: "Stylish hoodie fashion"
-  },
   {
     image: makeup,
     text: "Your glow, your story.",
     description: "Luxury beauty for everyday confidence.",
-    alt: "Premium makeup products"
+    alt: "Premium makeup products",
+  },
+  {
+    image: clo,
+    text: "Style that speaks softly.",
+    description: "Timeless looks for every mood.",
+    alt: "Stylish hoodie fashion",
   },
   {
     image: necklace,
     text: "Details define you.",
     description: "Minimal elegance for every moment.",
-    alt: "Elegant jewelry necklace"
+    alt: "Elegant jewelry necklace",
   },
   {
     image: skincare,
     text: "Skin that feels loved.",
     description: "Gentle. Real. Authentic.",
-    alt: "Natural skincare products"
+    alt: "Natural skincare products",
   },
 ];
 
@@ -44,8 +43,8 @@ export default function Hero() {
     const interval = setInterval(() => {
       setIsTransitioning(true);
       setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
-      
-      setTimeout(() => setIsTransitioning(false), 100);
+
+      setTimeout(() => setIsTransitioning(false), 400);
     }, SLIDE_INTERVAL);
 
     return () => clearInterval(interval);
@@ -54,38 +53,46 @@ export default function Hero() {
   const currentSlideData = useMemo(() => SLIDES[currentSlide], [currentSlide]);
 
   return (
-    <section className="space-y-6">
+    <section>
       <div className="relative w-full h-[80vh] overflow-hidden bg-gray-900">
         <img
           src={currentSlideData.image}
           alt={currentSlideData.alt}
           className={`w-full h-full object-cover transition-all duration-1000 ease-in-out ${
-            isTransitioning ? 'opacity-0 scale-110' : 'opacity-100 scale-105'
+            isTransitioning ? "opacity-0 scale-105" : "opacity-100 scale-100"
           }`}
-          loading="eager"
         />
-        
+
+        {/* TEXT */}
         <div className="absolute inset-0 flex flex-col justify-center items-start px-6 sm:px-10 lg:px-16 bg-linear-to-r from-black/60 to-black/20 text-white">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 max-w-xl drop-shadow-lg animate-fade-in">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 max-w-xl drop-shadow-lg">
             {currentSlideData.text}
           </h1>
-          <p className="text-lg sm:text-xl lg:text-2xl opacity-90 max-w-md drop-shadow-md animate-fade-in-delay">
+
+          <p className="text-lg sm:text-xl lg:text-2xl opacity-90 max-w-md drop-shadow-md mb-6">
             {currentSlideData.description}
           </p>
+
+          {/* CTA BUTTON */}
+          <a
+            href="/products"
+            className="px-6 py-3 bg-white text-black font-semibold rounded-md shadow-md hover:bg-gray-200 transition-all"
+          >
+            Shop Now
+          </a>
         </div>
 
-        {/* Slide Indicators */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+        {/* DOTS */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3">
           {SLIDES.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                index === currentSlide 
-                  ? 'bg-white w-8' 
-                  : 'bg-white/50 hover:bg-white/75'
+              className={`h-2 rounded-full transition-all duration-300 ${
+                index === currentSlide
+                  ? "bg-white w-6"
+                  : "bg-white/50 w-2 hover:bg-white/75"
               }`}
-              aria-label={`Go to slide ${index + 1}`}
             />
           ))}
         </div>

@@ -3,7 +3,7 @@ import { useProducts } from '../context/ProductContext'
 import { useCart } from '../context/CardContext'
 import ProductCard from '../components/ProductCard'
 import Loader from '../components/common/Loader'
-import { Search, X } from 'lucide-react';
+import { Search, X, AlertCircle, ShoppingCart } from 'lucide-react';
 
 export default function Products() {
   const { products, loading, error } = useProducts()
@@ -12,13 +12,12 @@ export default function Products() {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<'default' | 'price-low' | 'price-high' | 'rating'>('default')
 
-  // Get unique categories
   const categories = useMemo(() => {
     const cats = Array.from(new Set(products.map(p => p.category)))
     return ['all', ...cats.sort()]
   }, [products])
 
-  // Filter and sort products
+  // Get unique categories
   const filteredProducts = useMemo(() => {
     let filtered = products
 
@@ -26,8 +25,6 @@ export default function Products() {
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(p => p.category === selectedCategory)
     }
-
-    // Filter by search query
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(p =>
@@ -36,8 +33,6 @@ export default function Products() {
         p.brand?.toLowerCase().includes(query)
       )
     }
-
-    // Sort products
     switch (sortBy) {
       case 'price-low':
         filtered = [...filtered].sort((a, b) => a.price - b.price)
@@ -49,7 +44,6 @@ export default function Products() {
         filtered = [...filtered].sort((a, b) => b.rating - a.rating)
         break
     }
-
     return filtered
   }, [products, selectedCategory, searchQuery, sortBy])
 
@@ -58,12 +52,12 @@ export default function Products() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-        <div className="text-6xl mb-4">⚠️</div>
+        <AlertCircle className="text-red-500 w-16 h-16 mb-4" />
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Failed to Load Products</h2>
         <p className="text-gray-600 mb-4">{error}</p>
         <button
           onClick={() => window.location.reload()}
-          className="bg-linear-to-r from-[#5a4545] to-[#806161]  text-white px-6 py-2 rounded-lg hover:bg-[#806161] transition"
+          className="bg-linear-to-r from-[#5a4545] to-[#806161] text-white px-6 py-2 rounded-lg hover:bg-[#806161] transition"
         >
           Retry
         </button>
@@ -171,7 +165,7 @@ export default function Products() {
               setSearchQuery('')
               setSelectedCategory('all')
             }}
-            className="text-[#382a2a] hover:text-[#755757]  font-semibold"
+            className="text-[#382a2a] hover:text-[#755757] font-semibold"
             >
             Clear all filters
           </button>
@@ -185,6 +179,7 @@ export default function Products() {
             <div className="bg-white text-black w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg">
               {cartCount}
             </div>
+            <ShoppingCart className="w-6 h-6" />
           </div>
         </div>
       )}
