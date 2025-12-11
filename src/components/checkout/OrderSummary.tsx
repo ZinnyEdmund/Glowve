@@ -71,9 +71,9 @@ export default function OrderSummary({ items, subtotal, shipping, tax, total }: 
         )}
 
         {!isFreeShipping && subtotal > 0 && (
-          <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <Lightbulb className="w-5 h-5 text-blue-600 flex-0" />
-            <p className="text-sm text-blue-700">
+          <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <Lightbulb className="w-5 h-5 text-green-600 flex-0" />
+            <p className="text-sm text-green-700">
               Add {formatCurrency(FREE_SHIPPING_THRESHOLD - subtotal)} more for free shipping
             </p>
           </div>
