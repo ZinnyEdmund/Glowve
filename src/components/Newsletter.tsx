@@ -1,5 +1,6 @@
 import { Gift } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner"
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
@@ -7,14 +8,14 @@ export default function Newsletter() {
 
   const handleSubscribe = () => {
     if (!email || !email.includes("@")) {
-      alert("Please enter a valid email address");
+      toast.warning("Please enter a valid email address");
       return;
     }
 
     setIsLoading(true);
     
     setTimeout(() => {
-      alert("Thank you for subscribing!");
+      toast.success("Thank you for subscribing!");
       setEmail("");
       setIsLoading(false);
     }, 500);

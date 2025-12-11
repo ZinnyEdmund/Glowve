@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { toast } from "sonner"
 import {
   Pencil,
   Mail,
@@ -46,7 +47,7 @@ export default function Profile() {
       setTimeout(() => setShowSuccess(false), 3000)
     } catch (error) {
       console.error('Error saving profile:', error)
-      alert('Failed to save profile')
+      toast.error('Failed to save profile')
     } finally {
       setSaving(false)
     }
