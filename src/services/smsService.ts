@@ -1,3 +1,4 @@
+import { toast } from "sonner"
 export interface SMSResponse {
   success: boolean
   messageId?: string
@@ -13,7 +14,6 @@ export async function sendOTP(phone: string): Promise<SMSResponse> {
   try {
     const otp = generateOTP()
     
-    // Store OTP in localStorage for verification (in production, use backend)
     const otpData = {
       phone,
       code: otp,
@@ -21,18 +21,19 @@ export async function sendOTP(phone: string): Promise<SMSResponse> {
     }
     localStorage.setItem(`otp_${phone}`, JSON.stringify(otpData))
 
-    // In production, call Termii API
     console.log(`Sending OTP ${otp} to ${phone}`)
-    
-    // Simulate SMS sending
+
     await new Promise(res => setTimeout(res, 1500))
     
+    toast.success(`OTP sent to ${phone}`)  
+
     return {
       success: true,
       messageId: `MSG_${Date.now()}`
     }
   } catch (error) {
     console.error('SMS sending error:', error)
+    toast.error(`Failed to send OTP to ${phone}`)  
     return {
       success: false,
       error: 'Failed to send OTP. Please try again.'
@@ -40,32 +41,39 @@ export async function sendOTP(phone: string): Promise<SMSResponse> {
   }
 }
 
+
 // Verify OTP
 export async function verifyOTP(phone: string, code: string): Promise<boolean> {
   try {
     const storedData = localStorage.getItem(`otp_${phone}`)
-    if (!storedData) return false
-
-    const otpData = JSON.parse(storedData)
-    
-    // Check if OTP is expired
-    if (Date.now() > otpData.expiresAt) {
-      localStorage.removeItem(`otp_${phone}`)
+    if (!storedData) {
+      toast.error('No OTP found for this number.')
       return false
     }
 
-    // Verify code
+    const otpData = JSON.parse(storedData)
+    
+    if (Date.now() > otpData.expiresAt) {
+      localStorage.removeItem(`otp_${phone}`)
+      toast.error('OTP has expired. Please request a new one.')
+      return false
+    }
+
     if (otpData.code === code) {
       localStorage.removeItem(`otp_${phone}`)
+      toast.success('OTP verified successfully!')
       return true
     }
 
+    toast.error('Invalid OTP. Please try again.')
     return false
   } catch (error) {
     console.error('OTP verification error:', error)
+    toast.error('Error verifying OTP.')
     return false
   }
 }
+
 
 // Generate 6-digit OTP
 function generateOTP(): string {
