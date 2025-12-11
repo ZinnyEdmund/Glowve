@@ -37,7 +37,7 @@ export default function Navbar() {
         {/* LOGO */}
         <Link
           to="/"
-          className="flex items-center text-2xl text-[#755757] font-bold transition-all duration-300 hover:scale-110 hover:text-[#ca9c9cf2]"
+          className="flex items-center text-3xl text-[#755757] font-bold transition-all duration-300 hover:scale-110 hover:text-[#ca9c9cf2]"
           aria-label="Glowve Home"
         >
           <span className="relative">
@@ -52,7 +52,7 @@ export default function Navbar() {
             <Link 
               key={link.to} 
               to={link.to} 
-              className="relative text-base text-[#333333] font-medium transition-all duration-300 hover:text-[#ca9c9cf2] group"
+              className="relative text-xl text-[#333333] font-medium transition-all duration-300 hover:text-[#ca9c9cf2] group"
             >
               {link.label}
               <span 
@@ -86,7 +86,7 @@ export default function Navbar() {
             to="/cart"
             className="relative p-2 hover:text-[#785454] transition-all duration-300 hover:scale-110 group"
           >
-            <ShoppingCart size={22} className="transition-transform duration-300 group-hover:rotate-12" />
+            <ShoppingCart size={25} className="transition-transform duration-300 group-hover:rotate-12" />
             {cartCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium animate-pulse">
                 {cartCount > 99 ? "99+" : cartCount}
@@ -99,17 +99,17 @@ export default function Navbar() {
             <div className="relative hidden sm:block">
               <button
                 onClick={() => setDropdownOpen(p => !p)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/20 transition-all duration-300 hover:scale-105"
+                className="flex items-center gap-2 px-3 py-2 border border-gray-100 rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-105"
               >
-                <User size={18} className="text-gray-700" />
-                <span className="text-sm text-gray-700 font-medium">{user.name}</span>
+                <User size={22} className="text-gray-700" />
+                <span className="text-lg text-gray-700 font-medium">{user.name}</span>
               </button>
 
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-xl py-2 animate-slideDown origin-top">
                   <Link
                     to="/profile"
-                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 text-sm transition-all duration-200 hover:pl-5"
+                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 text-base transition-all duration-200 hover:pl-5"
                     onClick={() => setDropdownOpen(false)}
                   >
                     <User size={16} className="text-gray-600" />
@@ -117,7 +117,7 @@ export default function Navbar() {
                   </Link>
                   <Link
                     to="/orders"
-                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 text-sm transition-all duration-200 hover:pl-5"
+                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 text-base transition-all duration-200 hover:pl-5"
                     onClick={() => setDropdownOpen(false)}
                   >
                     <Package size={16} className="text-gray-600" />
@@ -126,7 +126,7 @@ export default function Navbar() {
                   <div className="border-t border-gray-200 my-1"></div>
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 text-sm transition-all duration-200 hover:pl-5 text-red-600"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 text-base transition-all duration-200 hover:pl-5 text-red-600"
                   >
                     <LogOut size={16} />
                     <span>Logout</span>

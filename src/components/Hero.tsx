@@ -1,4 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import clo from "/clo.jpg";
 import makeup from "/makeup.jpg";
 import necklace from "/necklace.jpg";
@@ -72,12 +74,16 @@ export default function Hero() {
           </p>
 
           {/* CTA BUTTON */}
-          <a
-            href="/products"
-            className="px-6 py-3 bg-white text-black font-semibold rounded-md shadow-md hover:bg-gray-200 transition-all"
+          <Link
+            to="/products"
+            className="inline-flex items-center gap-3 bg-white text-gray-900 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 hover:scale-105 transition-all shadow-xl group"
           >
             Shop Now
-          </a>
+            <ArrowRight
+              size={20}
+              className="group-hover:translate-x-1 transition-transform"
+            />
+          </Link>
         </div>
 
         {/* DOTS */}
