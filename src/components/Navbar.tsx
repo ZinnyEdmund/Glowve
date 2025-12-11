@@ -9,6 +9,7 @@ import { useCart } from "../context/CardContext"
 const NAV_LINKS = [
   { to: "/", label: "Home" },
   { to: "/products", label: "Products" },
+  { to: "/orders", label: "Order" },
 ]
 
 export default function Navbar() {
@@ -88,7 +89,7 @@ export default function Navbar() {
           >
             <ShoppingCart size={25} className="transition-transform duration-300 group-hover:rotate-12" />
             {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium animate-pulse">
+              <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
                 {cartCount > 99 ? "99+" : cartCount}
               </span>
             )}
@@ -114,14 +115,6 @@ export default function Navbar() {
                   >
                     <User size={16} className="text-gray-600" />
                     <span>Profile</span>
-                  </Link>
-                  <Link
-                    to="/orders"
-                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 text-base transition-all duration-200 hover:pl-5"
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    <Package size={16} className="text-gray-600" />
-                    <span>Orders</span>
                   </Link>
                   <div className="border-t border-gray-200 my-1"></div>
                   <button

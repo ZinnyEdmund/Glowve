@@ -228,7 +228,7 @@ export default function Cart() {
           <p className="text-gray-600">Check out our recommended products based on your cart</p>
           <Link
             to="/products"
-            className="inline-block mt-4 text-blue-600 hover:text-blue-700 font-semibold"
+            className="inline-block mt-4 text-black hover:text-zinc-700 font-semibold"
           >
             Browse Products →
           </Link>

@@ -6,6 +6,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { ProductProvider } from "./context/ProductContext";
 import { CartProvider } from "./context/CardContext";
 import { OrderProvider } from "./context/OrderContext";
+import { Toaster } from "sonner";
 import "./index.css";
 
 createRoot(document.getElementById("root")!).render(
@@ -15,6 +16,7 @@ createRoot(document.getElementById("root")!).render(
         <ProductProvider>
           <CartProvider>
             <OrderProvider>
+              <Toaster richColors position="top-right" />
               <App />
             </OrderProvider>
           </CartProvider>
