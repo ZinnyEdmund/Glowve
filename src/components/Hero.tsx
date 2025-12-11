@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import clo from "/clo.jpg";
 import makeup from "/makeup.jpg";
-import necklace from "/necklace.jpg";
+// import necklace from "/necklace.jpg";
+import omo from "/omo.jpg";
 import facecream from "/facecream.jpg";
 
 const SLIDES = [
@@ -20,7 +21,7 @@ const SLIDES = [
     alt: "Stylish hoodie fashion",
   },
   {
-    image: necklace,
+    image: omo,
     text: "Details define you.",
     description: "Minimal elegance for every moment.",
     alt: "Elegant jewelry necklace",
