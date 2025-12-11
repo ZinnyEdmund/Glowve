@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Facebook, Instagram, Twitter } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -84,21 +85,21 @@ export default function Footer() {
               className="text-gray-400 hover:text-white transition-colors"
               aria-label="Facebook"
             >
-              FB
+              <Facebook />
             </a>
             <a
               href="#"
               className="text-gray-400 hover:text-white transition-colors"
               aria-label="Instagram"
             >
-              IG
+               <Instagram />
             </a>
             <a
               href="#"
               className="text-gray-400 hover:text-white transition-colors"
               aria-label="Twitter"
             >
-              TW
+               <Twitter />
             </a>
           </div>
         </div>
