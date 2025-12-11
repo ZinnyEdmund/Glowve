@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { toast } from "sonner"
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react'
 
 export default function Register() {
@@ -39,13 +40,13 @@ export default function Register() {
 
     try {
       await register(form.name, form.email, form.password)
-      alert('Account created! You can now log in.')
+      toast.success('Account created! You can now log in.')
       nav('/login')
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message)
       } else {
-        setError('Something went wrong. Please try again.')
+        toast.error('Something went wrong. Please try again.')
       }
     } finally {
       setLoading(false)

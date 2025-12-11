@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner"
 import {
   Package,
   ShoppingBag,
@@ -24,9 +25,11 @@ export default function Orders() {
       try {
         const data = await fetchOrders();
         console.log("Loaded orders:", data); // Debug log
+        toast.success("Orders loaded successfully!");
         setOrders(data);
       } catch (error) {
         console.error("Error loading orders:", error);
+        toast.error("Failed to load orders. Please try again.");
       } finally {
         setLoading(false);
       }

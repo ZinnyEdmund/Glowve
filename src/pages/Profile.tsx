@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { toast } from "sonner"
 import {
   Pencil,
   Mail,
@@ -46,7 +47,7 @@ export default function Profile() {
       setTimeout(() => setShowSuccess(false), 3000)
     } catch (error) {
       console.error('Error saving profile:', error)
-      alert('Failed to save profile')
+      toast.error('Failed to save profile')
     } finally {
       setSaving(false)
     }
@@ -282,7 +283,7 @@ export default function Profile() {
       {/* Info Cards */}
       <div className="grid md:grid-cols-2 gap-6 mt-6">
         {/* Account Stats */}
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6">
+        <div className="bg-linear-to-br from-blue-50 to-blue-100 rounded-xl p-6">
           <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
             <User className="w-5 h-5" />
             <span>Account Stats</span>
