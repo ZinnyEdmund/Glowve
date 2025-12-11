@@ -2,9 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import clo from "/clo.jpg";
 import makeup from "/makeup.jpg";
 import necklace from "/necklace.jpg";
-import skincare from "/skincare.jpg";
-// import whitelace from "/whitelace.jpg";
-// // import goldlace from "/goldlace.jpg";
+import facecream from "/facecream.jpg";
 
 const SLIDES = [
   {
@@ -26,7 +24,7 @@ const SLIDES = [
     alt: "Elegant jewelry necklace",
   },
   {
-    image: skincare,
+    image: facecream,
     text: "Skin that feels loved.",
     description: "Gentle. Real. Authentic.",
     alt: "Natural skincare products",

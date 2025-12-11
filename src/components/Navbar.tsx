@@ -1,8 +1,8 @@
 // src/components/Navbar.tsx
 
 import { useState, useCallback } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { ShoppingCart, Menu, X, Search } from "lucide-react"
+import { Link, useNavigate, useLocation } from "react-router-dom"
+import { ShoppingCart, Menu, X, User, Package, LogOut } from "lucide-react"
 import { useAuth } from "../context/AuthContext"
 import { useCart } from "../context/CardContext"
 
@@ -11,13 +11,11 @@ const NAV_LINKS = [
   { to: "/products", label: "Products" },
 ]
 
-const linkClasses =
-  "hover:text-[#ca9c9cf2] text-base text-[#333333] font-medium transition-colors duration-300"
-
 export default function Navbar() {
   const { user, logout } = useAuth()
   const { cartCount } = useCart()
   const nav = useNavigate()
+  const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
 
@@ -30,6 +28,8 @@ export default function Navbar() {
     setMobileOpen(prev => !prev)
   }, [])
 
+  const isActive = (path: string) => location.pathname === path
+
   return (
     <nav className="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-40 shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -37,23 +37,43 @@ export default function Navbar() {
         {/* LOGO */}
         <Link
           to="/"
-          className="flex items-center text-2xl text-[#755757] font-bold transition-transform duration-300 hover:scale-105"
+          className="flex items-center text-2xl text-[#755757] font-bold transition-all duration-300 hover:scale-110 hover:text-[#ca9c9cf2]"
           aria-label="Glowve Home"
         >
-          Glowve
+          <span className="relative">
+            Glowve
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#ca9c9cf2] transition-all duration-300 group-hover:w-full"></span>
+          </span>
         </Link>
 
         {/* DESKTOP LINKS */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-8">
           {NAV_LINKS.map(link => (
-            <Link key={link.to} to={link.to} className={linkClasses}>
+            <Link 
+              key={link.to} 
+              to={link.to} 
+              className="relative text-base text-[#333333] font-medium transition-all duration-300 hover:text-[#ca9c9cf2] group"
+            >
               {link.label}
+              <span 
+                className={`absolute -bottom-1 left-0 h-0.5 bg-[#ca9c9cf2] transition-all duration-300 ${
+                  isActive(link.to) ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}
+              ></span>
             </Link>
           ))}
 
           {user?.role === "admin" && (
-            <Link to="/analytics" className={linkClasses}>
+            <Link 
+              to="/analytics" 
+              className="relative text-base text-[#333333] font-medium transition-all duration-300 hover:text-[#ca9c9cf2] group"
+            >
               Analytics
+              <span 
+                className={`absolute -bottom-1 left-0 h-0.5 bg-[#ca9c9cf2] transition-all duration-300 ${
+                  isActive('/analytics') ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}
+              ></span>
             </Link>
           )}
         </div>
@@ -61,23 +81,14 @@ export default function Navbar() {
         {/* RIGHT SIDE */}
         <div className="flex items-center gap-4">
 
-          {/* SEARCH */}
-          <Link
-            to="/search"
-            className="p-2 hover:text-[#785454] transition-colors duration-300"
-            aria-label="Search"
-          >
-            <Search size={20} />
-          </Link>
-
           {/* CART */}
           <Link
             to="/cart"
-            className="relative p-2 hover:text-[#785454] transition-colors duration-300"
+            className="relative p-2 hover:text-[#785454] transition-all duration-300 hover:scale-110 group"
           >
-            <ShoppingCart size={22} />
+            <ShoppingCart size={22} className="transition-transform duration-300 group-hover:rotate-12" />
             {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-600 p-3 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium animate-bounce">
+              <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium animate-pulse">
                 {cartCount > 99 ? "99+" : cartCount}
               </span>
             )}
@@ -88,30 +99,37 @@ export default function Navbar() {
             <div className="relative hidden sm:block">
               <button
                 onClick={() => setDropdownOpen(p => !p)}
-                className="flex items-center gap-2 p-2 hover:text-[#785454] transition-colors duration-300"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/20 transition-all duration-300 hover:scale-105"
               >
-                <span className="text-sm text-gray-700">{user.name}</span>
+                <User size={18} className="text-gray-700" />
+                <span className="text-sm text-gray-700 font-medium">{user.name}</span>
               </button>
 
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg py-2 animate-fadeIn">
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-xl py-2 animate-slideDown origin-top">
                   <Link
                     to="/profile"
-                    className="block px-4 py-2 hover:bg-gray-100 text-sm transition-colors duration-200"
+                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 text-sm transition-all duration-200 hover:pl-5"
+                    onClick={() => setDropdownOpen(false)}
                   >
-                    Profile
+                    <User size={16} className="text-gray-600" />
+                    <span>Profile</span>
                   </Link>
                   <Link
                     to="/orders"
-                    className="block px-4 py-2 hover:bg-gray-100 text-sm transition-colors duration-200"
+                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 text-sm transition-all duration-200 hover:pl-5"
+                    onClick={() => setDropdownOpen(false)}
                   >
-                    Orders
+                    <Package size={16} className="text-gray-600" />
+                    <span>Orders</span>
                   </Link>
+                  <div className="border-t border-gray-200 my-1"></div>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm transition-colors duration-200"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 text-sm transition-all duration-200 hover:pl-5 text-red-600"
                   >
-                    Logout
+                    <LogOut size={16} />
+                    <span>Logout</span>
                   </button>
                 </div>
               )}
@@ -119,7 +137,7 @@ export default function Navbar() {
           ) : (
             <Link
               to="/login"
-              className="px-5 py-2 bg-black hover:bg-zinc-700 text-white rounded-md text-sm font-medium transition-colors duration-300"
+              className="px-5 py-2 bg-black hover:bg-zinc-700 text-white rounded-md text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg"
             >
               Login
             </Link>
@@ -127,11 +145,15 @@ export default function Navbar() {
 
           {/* MOBILE TOGGLE */}
           <button
-            className="md:hidden p-2 transition-transform duration-300 hover:scale-110"
+            className="md:hidden p-2 transition-all duration-300 hover:scale-110 hover:bg-white/20 rounded-lg"
             onClick={toggleMobile}
             aria-expanded={mobileOpen}
           >
-            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+            {mobileOpen ? (
+              <X size={22} className="transition-transform duration-300 rotate-90" />
+            ) : (
+              <Menu size={22} className="transition-transform duration-300" />
+            )}
           </button>
         </div>
       </div>
@@ -144,40 +166,59 @@ export default function Navbar() {
               <Link
                 key={link.to}
                 to={link.to}
-                className="block px-3 py-2 hover:bg-gray-50 text-gray-700 font-medium rounded-md transition-colors duration-200"
+                className={`block px-3 py-2.5 hover:bg-gray-50 text-gray-700 font-medium rounded-md transition-all duration-200 hover:pl-5 ${
+                  isActive(link.to) ? 'bg-gray-100 border-l-4 border-[#ca9c9cf2]' : ''
+                }`}
                 onClick={() => setMobileOpen(false)}
               >
                 {link.label}
               </Link>
             ))}
 
+            {user?.role === "admin" && (
+              <Link
+                to="/analytics"
+                className={`block px-3 py-2.5 hover:bg-gray-50 text-gray-700 font-medium rounded-md transition-all duration-200 hover:pl-5 ${
+                  isActive('/analytics') ? 'bg-gray-100 border-l-4 border-[#ca9c9cf2]' : ''
+                }`}
+                onClick={() => setMobileOpen(false)}
+              >
+                Analytics
+              </Link>
+            )}
+
             {user ? (
               <>
+                <div className="border-t border-gray-200 my-2"></div>
                 <Link
                   to="/profile"
-                  className="block px-3 py-2 hover:bg-gray-50 text-gray-700 font-medium rounded-md transition-colors duration-200"
+                  className="flex items-center gap-3 px-3 py-2.5 hover:bg-gray-50 text-gray-700 font-medium rounded-md transition-all duration-200 hover:pl-5"
                   onClick={() => setMobileOpen(false)}
                 >
-                  Profile
+                  <User size={18} />
+                  <span>Profile</span>
                 </Link>
                 <Link
                   to="/orders"
-                  className="block px-3 py-2 hover:bg-gray-50 text-gray-700 font-medium rounded-md transition-colors duration-200"
+                  className="flex items-center gap-3 px-3 py-2.5 hover:bg-gray-50 text-gray-700 font-medium rounded-md transition-all duration-200 hover:pl-5"
                   onClick={() => setMobileOpen(false)}
                 >
-                  Orders
+                  <Package size={18} />
+                  <span>Orders</span>
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-3 py-2 hover:bg-gray-50 text-gray-700 font-medium rounded-md transition-colors duration-200"
+                  className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-red-50 text-red-600 font-medium rounded-md transition-all duration-200 hover:pl-5"
                 >
-                  Logout
+                  <LogOut size={18} />
+                  <span>Logout</span>
                 </button>
               </>
             ) : (
               <Link
                 to="/login"
-                className="block px-3 py-2 bg-black text-white text-center rounded-md font-medium transition-colors duration-300"
+                className="block px-3 py-2.5 bg-black text-white text-center rounded-md font-medium transition-all duration-300 hover:bg-zinc-700 hover:scale-105"
+                onClick={() => setMobileOpen(false)}
               >
                 Login
               </Link>
@@ -185,6 +226,22 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
+      <style>{`
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-slideDown {
+          animation: slideDown 0.3s ease-out;
+        }
+      `}</style>
     </nav>
   )
 }
