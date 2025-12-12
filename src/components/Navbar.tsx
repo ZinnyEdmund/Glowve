@@ -20,10 +20,10 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
 
-  const handleLogout = useCallback(() => {
-    logout()
-    nav("/")
-  }, [logout, nav])
+const handleLogout = useCallback(() => {
+  logout()
+  nav("/")
+}, [logout, nav])
 
   const toggleMobile = useCallback(() => {
     setMobileOpen(prev => !prev)
@@ -53,7 +53,7 @@ export default function Navbar() {
             <Link 
               key={link.to} 
               to={link.to} 
-              className="relative text-xl text-[#333333] font-medium transition-all duration-300 hover:text-[#ca9c9cf2] group"
+              className="relative text-xl text-[#1f1e1e] font-medium transition-all duration-300 hover:text-[#ca9c9cf2] group"
             >
               {link.label}
               <span 

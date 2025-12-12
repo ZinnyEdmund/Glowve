@@ -36,7 +36,7 @@ export default function Cart() {
         </p>
         <Link
           to="/products"
-          className="inline-block px-8 py-4 bg-linear-to-r from-[#755757] to-[#5a4242] text-white rounded-lg hover:bg-[#382a2a]  transition font-semibold text-lg"
+          className="inline-block px-8 py-4 bg-linear-to-r from-[#755757] to-[#5a4242] text-white rounded-lg hover:bg-[#382a2a] transition font-semibold text-lg"
         >
           Start Shopping
         </Link>
