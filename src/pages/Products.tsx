@@ -3,11 +3,11 @@ import { useProducts } from '../context/ProductContext'
 import { useCart } from '../context/CardContext'
 import ProductCard from '../components/ProductCard'
 import Loader from '../components/common/Loader'
-import { Search, X, AlertCircle, ShoppingCart } from 'lucide-react';
+import { Search, X, AlertCircle } from 'lucide-react';
 
 export default function Products() {
   const { products, loading, error } = useProducts()
-  const { addToCart, cartCount } = useCart()
+  const { addToCart } = useCart()
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<'default' | 'price-low' | 'price-high' | 'rating'>('default')
@@ -172,17 +172,7 @@ export default function Products() {
         </div>
       )}
 
-      {/* Floating Cart Summary */}
-      {cartCount > 0 && (
-        <div className="fixed bottom-6 right-6 g-linear-to-r from-[#755757] to-[#5a4242] text-white p-4 rounded-2xl animate-bounce z-50">
-          <div className="flex items-center gap-3">
-            <div className="bg-white text-black w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg">
-              {cartCount}
-            </div>
-            <ShoppingCart className="w-6 h-6" />
-          </div>
-        </div>
-      )}
+      
     </div>
   )
 }
