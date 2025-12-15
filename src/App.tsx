@@ -7,13 +7,13 @@ import Register from "./pages/Register"
 import Profile from "./pages/Profile"
 import Orders from "./pages/Orders"
 import OrderDetails from "./pages/OrderDetails"
-import Analytics from "./pages/Analytics"
+// import Analytics from "./pages/Analytics"
 import Cart from "./pages/Cart"
 import Checkout from "./pages/Checkout"
 import PaymentSuccess from "./pages/PaymentSuccess"
 import PaymentFailed from "./pages/PaymentFailed"
 import Products from "./pages/Products"
-import VerifyPhone from "./pages/VerifyPhone"
+// import VerifyPhone from "./pages/VerifyPhone"
 import ProtectedRoute from "./components/ProtectedRoute"
 
 export default function App() {
@@ -23,7 +23,7 @@ export default function App() {
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/verify-phone" element={<VerifyPhone />} />
+        {/* <Route path="/verify-phone" element={<VerifyPhone />} /> */}
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFailed />} />
       </Route>
@@ -66,14 +66,14 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-        <Route
+        {/* <Route
           path="/analytics"
           element={
             <ProtectedRoute adminOnly>
               <Analytics />
             </ProtectedRoute>
           }
-        />
+        /> */}
       </Route>
     </Routes>
   )
