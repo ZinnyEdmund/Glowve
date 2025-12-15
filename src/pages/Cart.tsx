@@ -67,7 +67,7 @@ export default function Cart() {
                 <img
                   src={item.thumbnail}
                   alt={item.title}
-                  className="w-32 h-32 object-cover rounded-lg"
+                  className="w-32 h-32 object-cover rounded-lg self-center"
                 />
 
                 <div className="flex-1">
