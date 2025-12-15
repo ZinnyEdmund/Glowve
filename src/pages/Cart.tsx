@@ -1,5 +1,3 @@
-// src/pages/Cart.tsx (Updated with Lucide Icons)
-
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CardContext'
 import { useAuth } from '../context/AuthContext'
@@ -65,7 +63,7 @@ export default function Cart() {
 
           {cart.map(item => (
             <div key={item.id} className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition">
-              <div className="flex gap-6">
+              <div className="flex flex-col sm:flex-row md:flex-row lg:flex-row gap-3 sm:gap-4 md:gap-5 lg:gap-6">
                 <img
                   src={item.thumbnail}
                   alt={item.title}
