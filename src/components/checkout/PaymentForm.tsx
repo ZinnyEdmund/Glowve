@@ -53,7 +53,7 @@ const [cardDetails, setCardDetails] = useState<CardDetails>({
               key={method.id}
               className={`flex items-center gap-4 p-4 border-2 rounded-lg cursor-pointer transition ${
                 selectedMethod === method.id
-                  ? "border-blue-600 bg-blue-50"
+                  ? "border-gray-600 bg-gray-50"
                   : "border-gray-200 hover:border-gray-300"
               }`}
             >
