@@ -4,15 +4,15 @@ import { PAYMENT_METHODS } from "../../utils/constants";
 import { Lightbulb, Info, Lock, ArrowLeft } from "lucide-react";
 
 type CardDetails = {
-  number: string;
-  expiry: string;
-  cvc: string;
-  name: string;
+  cardNumber: string;
+  expiryDate: string;
+  cvv: string;
+  cardholderName: string;
   // icon: string;
 };
 
 type Props = {
-  onSubmit: (method: PaymentMethod, cardDetails?: CardDetails) => void;
+  onSubmit: (method: PaymentMethod, cardDetails?: CardDetails) => Promise<void>;
   onBack: () => void;
   processing?: boolean;
 };
@@ -24,11 +24,11 @@ export default function PaymentForm({
 }: Props) {
   const [selectedMethod, setSelectedMethod] =
     useState<PaymentMethod>("paystack");
-  const [cardDetails, setCardDetails] = useState({
-    number: "",
-    expiry: "",
-    cvc: "",
-    name: "",
+const [cardDetails, setCardDetails] = useState<CardDetails>({
+    cardNumber: "",
+    expiryDate: "",
+    cvv: "",
+    cardholderName: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -85,9 +85,9 @@ export default function PaymentForm({
             </label>
             <input
               type="text"
-              value={cardDetails.number}
+              value={cardDetails.cardNumber}
               onChange={(e) =>
-                setCardDetails({ ...cardDetails, number: e.target.value })
+                setCardDetails({ ...cardDetails, cardNumber: e.target.value })
               }
               placeholder="1234 5678 9012 3456"
               maxLength={19}
@@ -103,9 +103,9 @@ export default function PaymentForm({
               </label>
               <input
                 type="text"
-                value={cardDetails.expiry}
+                value={cardDetails.expiryDate}
                 onChange={(e) =>
-                  setCardDetails({ ...cardDetails, expiry: e.target.value })
+                  setCardDetails({ ...cardDetails, expiryDate: e.target.value })
                 }
                 placeholder="MM/YY"
                 maxLength={5}
@@ -120,9 +120,9 @@ export default function PaymentForm({
               </label>
               <input
                 type="text"
-                value={cardDetails.cvc}
+                value={cardDetails.cvv}
                 onChange={(e) =>
-                  setCardDetails({ ...cardDetails, cvc: e.target.value })
+                  setCardDetails({ ...cardDetails, cvv: e.target.value })
                 }
                 placeholder="123"
                 maxLength={4}
@@ -138,9 +138,9 @@ export default function PaymentForm({
             </label>
             <input
               type="text"
-              value={cardDetails.name}
+              value={cardDetails.cardholderName}
               onChange={(e) =>
-                setCardDetails({ ...cardDetails, name: e.target.value })
+                setCardDetails({ ...cardDetails, cardholderName: e.target.value })
               }
               placeholder="JOHN DOE"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#755757] outline-none"

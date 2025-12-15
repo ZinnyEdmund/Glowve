@@ -6,8 +6,8 @@ export interface SMSResponse {
 }
 
 // Termii Configuration (Nigerian SMS provider)
-const TERMII_API_KEY = import.meta.env.VITE_TERMII_API_KEY || 'xxxxx'
-const TERMII_SENDER_ID = 'YourStore'
+// const TERMII_API_KEY = import.meta.env.VITE_TERMII_API_KEY || 'xxxxx'
+// const TERMII_SENDER_ID = 'YourStore'
 
 // Send OTP via SMS
 export async function sendOTP(phone: string): Promise<SMSResponse> {
