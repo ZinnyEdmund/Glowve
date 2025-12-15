@@ -77,7 +77,7 @@ export default function Cart() {
                     <div>
                       <h3 className="font-bold text-gray-900 text-lg mb-1">{item.title}</h3>
                       {item.brand && (
-                        <p className="text-sm text-blue-600 font-semibold">{item.brand}</p>
+                        <p className="text-sm text-[#6d2929] font-semibold">{item.brand}</p>
                       )}
                     </div>
                     <button

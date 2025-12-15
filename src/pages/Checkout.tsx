@@ -121,11 +121,11 @@ export default function Checkout() {
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-2">Checkout</h1>
         <div className="flex items-center gap-2 text-sm text-gray-600">
-          <span className={step === 'shipping' ? 'text-blue-600 font-semibold' : ''}>
+          <span className={step === 'shipping' ? 'text-green-600 font-semibold' : ''}>
             1. Shipping
           </span>
           <span>→</span>
-          <span className={step === 'payment' ? 'text-blue-600 font-semibold' : ''}>
+          <span className={step === 'payment' ? 'text-green-600 font-semibold' : ''}>
             2. Payment
           </span>
         </div>
