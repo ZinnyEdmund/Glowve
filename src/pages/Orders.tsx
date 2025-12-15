@@ -62,7 +62,7 @@ export default function Orders() {
           </p>
           <Link
             to="/products"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all hover:scale-105 active:scale-95 font-semibold"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-linear-to-r from-[#755757] to-[#5a4242] text-white rounded-lg hover:bg-[#3d2b2b] transition-all hover:scale-105 active:scale-95 font-semibold"
           >
             <ShoppingBag className="w-5 h-5" />
             <span>Start Shopping</span>
