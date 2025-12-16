@@ -1,5 +1,3 @@
-// src/components/Navbar.tsx
-
 import { useState, useCallback } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
 import { ShoppingCart, Menu, X, User, Package, LogOut } from "lucide-react"

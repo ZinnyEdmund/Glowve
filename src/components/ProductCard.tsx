@@ -1,5 +1,3 @@
-// src/components/ProductCard.tsx
-
 import { useState } from "react";
 import type { Product } from "../types";
 

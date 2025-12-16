@@ -1,34 +1,37 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { useCart } from '../context/CardContext'
-import { useAuth } from '../context/AuthContext'
-import { formatCurrency } from '../utils/formatters'
-import { SHIPPING_COST, FREE_SHIPPING_THRESHOLD } from '../utils/constants'
-import { ShoppingCart, PartyPopper, Lock, ShieldCheck } from 'lucide-react'
+import { Link, useNavigate } from "react-router-dom";
+import { useCart } from "../context/CardContext";
+import { useAuth } from "../context/AuthContext";
+import { formatCurrency } from "../utils/formatters";
+import { SHIPPING_COST, FREE_SHIPPING_THRESHOLD } from "../utils/constants";
+import { ShoppingCart, PartyPopper, Lock, ShieldCheck, X } from "lucide-react";
 
 export default function Cart() {
-  const navigate = useNavigate()
-  const { user } = useAuth()
-  const { cart, updateQuantity, removeFromCart, cartTotal, clearCart } = useCart()
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { cart, updateQuantity, removeFromCart, cartTotal, clearCart } =
+    useCart();
 
-  const subtotal = cartTotal
-  const isFreeShipping = subtotal >= FREE_SHIPPING_THRESHOLD
-  const shipping = isFreeShipping ? 0 : SHIPPING_COST
-  const tax = subtotal * 0.08
-  const total = subtotal + shipping + tax
+  const subtotal = cartTotal;
+  const isFreeShipping = subtotal >= FREE_SHIPPING_THRESHOLD;
+  const shipping = isFreeShipping ? 0 : SHIPPING_COST;
+  const tax = subtotal * 0.08;
+  const total = subtotal + shipping + tax;
 
   const handleCheckout = () => {
     if (!user) {
-      navigate('/login?redirect=/checkout')
+      navigate("/login?redirect=/checkout");
     } else {
-      navigate('/checkout')
+      navigate("/checkout");
     }
-  }
+  };
 
   if (cart.length === 0) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-16 text-center">
         <ShoppingCart className="w-24 h-24 text-gray-600 mx-auto mb-6" />
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Your Cart is Empty</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          Your Cart is Empty
+        </h1>
         <p className="text-gray-600 mb-8">
           Looks like you haven't added anything to your cart yet.
         </p>
@@ -39,14 +42,16 @@ export default function Cart() {
           Start Shopping
         </Link>
       </div>
-    )
+    );
   }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-2">Shopping Cart</h1>
-        <p className="text-gray-600">{cart.length} {cart.length === 1 ? 'item' : 'items'} in your cart</p>
+        <p className="text-gray-600">
+          {cart.length} {cart.length === 1 ? "item" : "items"} in your cart
+        </p>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
@@ -61,8 +66,11 @@ export default function Cart() {
             </button>
           </div>
 
-          {cart.map(item => (
-            <div key={item.id} className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition">
+          {cart.map((item) => (
+            <div
+              key={item.id}
+              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition"
+            >
               <div className="flex flex-col sm:flex-row md:flex-row lg:flex-row gap-3 sm:gap-4 md:gap-5 lg:gap-6">
                 <img
                   src={item.thumbnail}
@@ -73,37 +81,49 @@ export default function Cart() {
                 <div className="flex-1">
                   <div className="flex justify-between mb-2">
                     <div>
-                      <h3 className="font-bold text-gray-900 text-lg mb-1">{item.title}</h3>
+                      <h3 className="font-bold text-gray-900 text-lg mb-1">
+                        {item.title}
+                      </h3>
                       {item.brand && (
-                        <p className="text-sm text-[#6d2929] font-semibold">{item.brand}</p>
+                        <p className="text-sm text-[#6d2929] font-semibold">
+                          {item.brand}
+                        </p>
                       )}
                     </div>
                     <button
                       onClick={() => removeFromCart(item.id)}
                       className="text-red-500 hover:text-red-700 transition"
                     >
-                      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
+                      <span>
+                        <X />
+                      </span>
                     </button>
                   </div>
 
-                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">{item.description}</p>
+                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                    {item.description}
+                  </p>
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity - 1)
+                        }
                         className="w-8 h-8 rounded-lg bg-gray-200 hover:bg-gray-300 flex items-center justify-center font-bold transition"
                       >
                         −
                       </button>
-                      <span className="font-bold text-lg min-w-8 text-center">{item.quantity}</span>
+                      <span className="font-bold text-lg min-w-8 text-center">
+                        {item.quantity}
+                      </span>
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity + 1)
+                        }
                         disabled={item.quantity >= item.stock}
                         className="w-8 h-8 rounded-lg bg-[#755757] hover:bg-b[#382a2a] text-white flex items-center justify-center font-bold transition disabled:opacity-50 disabled:cursor-not-allowed"
-                      > 
+                      >
                         +
                       </button>
                       <span className="text-sm text-gray-600 ml-2">
@@ -128,12 +148,16 @@ export default function Cart() {
 
         <div className="lg:col-span-1">
           <div className="bg-gray-50 rounded-xl p-6 sticky top-4">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Order Summary</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              Order Summary
+            </h2>
 
             <div className="space-y-4 mb-6">
               <div className="flex justify-between text-gray-700">
                 <span>Subtotal ({cart.length} items)</span>
-                <span className="font-semibold">{formatCurrency(subtotal)}</span>
+                <span className="font-semibold">
+                  {formatCurrency(subtotal)}
+                </span>
               </div>
 
               <div className="flex justify-between text-gray-700">
@@ -141,7 +165,9 @@ export default function Cart() {
                 {isFreeShipping ? (
                   <span className="font-semibold text-green-600">FREE</span>
                 ) : (
-                  <span className="font-semibold">{formatCurrency(shipping)}</span>
+                  <span className="font-semibold">
+                    {formatCurrency(shipping)}
+                  </span>
                 )}
               </div>
 
@@ -163,11 +189,17 @@ export default function Cart() {
                   <div className="w-full bg-blue-200 rounded-full h-2 mb-2">
                     <div
                       className="bg-black h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100)}%` }}
+                      style={{
+                        width: `${Math.min(
+                          (subtotal / FREE_SHIPPING_THRESHOLD) * 100,
+                          100
+                        )}%`,
+                      }}
                     />
                   </div>
                   <p className="text-xs text-black">
-                    Add {formatCurrency(FREE_SHIPPING_THRESHOLD - subtotal)} more for free shipping!
+                    Add {formatCurrency(FREE_SHIPPING_THRESHOLD - subtotal)}{" "}
+                    more for free shipping!
                   </p>
                 </div>
               )}
@@ -221,9 +253,13 @@ export default function Cart() {
       </div>
 
       <div className="mt-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">You May Also Like</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          You May Also Like
+        </h2>
         <div className="bg-white rounded-xl p-8 text-center">
-          <p className="text-gray-600">Check out our recommended products based on your cart</p>
+          <p className="text-gray-600">
+            Check out our recommended products based on your cart
+          </p>
           <Link
             to="/products"
             className="inline-block mt-4 text-black hover:text-zinc-700 font-semibold"
@@ -233,5 +269,5 @@ export default function Cart() {
         </div>
       </div>
     </div>
-  )
+  );
 }

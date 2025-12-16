@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import clo from "/clo.jpg";
 import makeup from "/makeup.jpg";
-// import necklace from "/necklace.jpg";
 import omo from "/omo.jpg";
 import facecream from "/facecream.jpg";
 
