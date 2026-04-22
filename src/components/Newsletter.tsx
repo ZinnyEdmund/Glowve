@@ -43,7 +43,7 @@ export default function Newsletter() {
             Subscribe to our newsletter for exclusive deals, new arrivals, and beauty tips delivered to your inbox
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto pt-4">
+          <form className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto pt-4">
             <input
               type="email"
               value={email}
@@ -61,7 +61,7 @@ export default function Newsletter() {
             >
               {isLoading ? "Subscribing..." : "Subscribe"}
             </button>
-          </div>
+          </form>
           
           <p className="text-sm text-gray-500">
             We respect your privacy. Unsubscribe anytime.

@@ -25,7 +25,8 @@ const PromoBanner: FC = memo(() => (
             </h2>
 
             <p className="text-white/90 text-lg lg:text-xl max-w-md leading-relaxed">
-              Get up to 40% off on selected items. Elevate your style with our curated summer essentials.
+              Get up to 40% off on selected items. Elevate your style with our
+              curated summer essentials.
             </p>
 
             <Link
@@ -33,7 +34,10 @@ const PromoBanner: FC = memo(() => (
               className="inline-flex items-center gap-3 bg-white text-[#755757] px-8 py-4 rounded-xl font-bold hover:bg-gray-100 hover:scale-105 transition-all shadow-xl group"
             >
               Shop Now
-              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform"
+              />
             </Link>
           </div>
 

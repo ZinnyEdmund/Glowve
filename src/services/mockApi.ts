@@ -74,7 +74,7 @@ export async function fetchProducts(): Promise<Product[]> {
     const data = await response.json()
     
     // Transform to match our Product type
-    return data.products.map((p: any) => ({
+    return data.products.map((p: Product) => ({
       id: p.id,
       title: p.title,
       price: p.price,

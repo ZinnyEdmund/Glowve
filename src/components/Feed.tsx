@@ -1,4 +1,3 @@
-// import { ArrowRight } from "lucide-react";
 import { memo } from "react";
 import type { FC } from "react";
 
