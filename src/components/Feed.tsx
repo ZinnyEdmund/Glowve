@@ -1,10 +1,11 @@
-import { memo } from "react";
-import type { FC } from "react";
+import { memo } from "react"
+import type { FC } from "react"
+import { Instagram, Heart } from "lucide-react"
 
 interface InstaPost {
-  id: number;
-  image: string;
-  likes: number;
+  id: number
+  image: string
+  likes: number
 }
 
 const INSTAGRAM_POSTS: InstaPost[] = [
@@ -13,55 +14,69 @@ const INSTAGRAM_POSTS: InstaPost[] = [
   { id: 3, image: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=400&q=80", likes: 891 },
   { id: 4, image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&q=80", likes: 432 },
   { id: 5, image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&q=80", likes: 678 },
-  { id: 6, image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&q=80", likes: 345 }
-];
+  { id: 6, image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&q=80", likes: 345 },
+]
+
+const INSTAGRAM_URL = "https://instagram.com/glowve"
 
 const InstagramFeed: FC = memo(() => (
   <section className="py-20">
-    <div className="max-w-7xl mx-auto px-4">
-      <div className="text-center mb-14 space-y-3">
-        <h2 className="text-4xl md:text-5xl font-bold text-black">
-          Follow Us{" "}
-          <span className="bg-linear-to-r from-[#755757eb] to-[#785454dd] bg-clip-text text-transparent">@glowve</span>
-        </h2>
-        <p className="text-gray-600 text-lg">Join our community and share your style</p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      {/* HEADER */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 gap-4">
+        <div>
+          <p className="text-[11px] font-semibold text-[#755757] uppercase tracking-widest mb-2">Community</p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+            Follow{" "}
+            <span className="text-[#755757]">@glowve</span>
+          </h2>
+          <p className="text-gray-500 text-sm mt-1">Share your style with our community</p>
+        </div>
+        <a
+          href={INSTAGRAM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-4 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:border-[#755757] hover:text-[#755757] transition-all duration-200 shrink-0"
+        >
+          <Instagram size={14} />
+          Follow us
+        </a>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
-        {INSTAGRAM_POSTS.map((post, index) => (
+      {/* PHOTO GRID */}
+      <div className="grid grid-cols-3 md:grid-cols-6 gap-2 sm:gap-3">
+        {INSTAGRAM_POSTS.map((post) => (
           <a
             key={post.id}
-            href="#instagram"
-            className="group relative aspect-square overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all hover:scale-105"
-            style={{ animationDelay: `${index * 50}ms` }}
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative aspect-square overflow-hidden rounded-xl bg-gray-100"
+            aria-label={`Instagram post — ${post.likes.toLocaleString()} likes`}
           >
             <img
               src={post.image}
-              alt={`Instagram post ${post.id}`}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              alt={`Glowve Instagram post ${post.id}`}
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
               loading="lazy"
             />
-            <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center p-4">
-              <span className="text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform">
-                ❤️ {post.likes.toLocaleString()}
-              </span>
+            {/* Hover overlay */}
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/45 transition-all duration-300 flex items-center justify-center">
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center gap-1">
+                <Heart size={16} className="text-white fill-white" />
+                <span className="text-white text-xs font-semibold">
+                  {post.likes.toLocaleString()}
+                </span>
+              </div>
             </div>
           </a>
         ))}
       </div>
 
-      {/* <div className="text-center mt-12">
-        <a
-          href="#instagram"
-          className="inline-flex items-center gap-2 text-[#755757] font-semibold text-lg hover:gap-3 transition-all group"
-        >
-          View More on Instagram
-          <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-        </a>
-      </div> */}
     </div>
   </section>
-));
+))
 
-InstagramFeed.displayName = "InstagramFeed";
-export default InstagramFeed;
+InstagramFeed.displayName = "InstagramFeed"
+export default InstagramFeed

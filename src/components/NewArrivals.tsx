@@ -1,14 +1,14 @@
-import { ArrowRight, Sparkles } from "lucide-react";
-import { memo } from "react";
-import type { FC } from "react";
-import { Link } from "react-router-dom";
+import { ArrowRight, Sparkles } from "lucide-react"
+import { memo } from "react"
+import type { FC } from "react"
+import { Link } from "react-router-dom"
 
 interface Product {
-  id: number;
-  name: string;
-  image: string;
-  badge: string;
-  badgeColor: string;
+  id: number
+  name: string
+  image: string
+  badge: string
+  badgeColor: string
 }
 
 const PRODUCTS: Product[] = [
@@ -39,64 +39,73 @@ const PRODUCTS: Product[] = [
     image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&q=80",
     badge: "Hot",
     badgeColor: "bg-orange-500",
-  }
-];
+  },
+]
 
 const NewArrivals: FC = memo(() => (
-  <section className="py-20">
-    <div className="max-w-7xl mx-auto px-4">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Sparkles className="text-[#755757]" size={24} />
-            <span className="text-sm font-semibold text-[#755757] uppercase tracking-wider">
+  <section className="py-20 bg-gray-50">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      {/* HEADER */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 gap-4">
+        <div>
+          <div className="flex items-center gap-1.5 mb-2">
+            <Sparkles size={13} className="text-[#755757]" />
+            <span className="text-[11px] font-semibold text-[#755757] uppercase tracking-widest">
               Just Dropped
             </span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-black tracking-tight">New Arrivals</h2>
-          <p className="text-gray-600 text-lg">Discover our latest collection</p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">New Arrivals</h2>
+          <p className="text-gray-500 text-sm mt-1">Discover our latest collection</p>
         </div>
-
         <Link
           to="/products"
-          className="group flex items-center gap-2 text-[#755757] font-semibold hover:text-[#5a4242] transition-all"
+          className="group flex items-center gap-1.5 text-sm font-medium text-[#755757] hover:text-[#5a4242] transition-colors shrink-0"
         >
-          View All
-          <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+          View all
+          <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform duration-200" />
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+      {/* PRODUCT GRID */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {PRODUCTS.map((product) => (
-          <div
+          <Link
             key={product.id}
-            className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-sm transition-all duration-500"
+            to={`/products/${product.id}`}
+            className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all duration-300 block"
           >
-            <div className="relative overflow-hidden aspect-square">
+            {/* IMAGE */}
+            <div className="relative overflow-hidden aspect-square bg-gray-50">
               <img
                 src={product.image}
                 alt={product.name}
-                className="w-full h-full object-cover group-hover:scale-100 transition-transform duration-700"
+                className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
               <span
-                className={`absolute top-3 left-3 ${product.badgeColor} text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg`}
+                className={`absolute top-3 left-3 ${product.badgeColor} text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm`}
               >
                 {product.badge}
               </span>
             </div>
 
-            <div className="p-5">
-              <h3 className="font-bold text-center text-black mb-2 line-clamp-1 text-lg md:text-base">{product.name}</h3>
+            {/* INFO */}
+            <div className="p-4">
+              <h3 className="font-semibold text-gray-900 text-sm leading-snug line-clamp-1 mb-2.5">
+                {product.name}
+              </h3>
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-[#755757] group-hover:gap-1.5 transition-all duration-200">
+                View product
+                <ArrowRight size={11} />
+              </span>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
   </section>
-));
+))
 
-NewArrivals.displayName = "NewArrivals";
-export default NewArrivals;
+NewArrivals.displayName = "NewArrivals"
+export default NewArrivals

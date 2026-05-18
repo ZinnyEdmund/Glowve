@@ -1,13 +1,13 @@
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
-import { ShoppingCart, Menu, X, User, Package, LogOut } from "lucide-react"
+import { ShoppingCart, Menu, X, User, Package, LogOut, ChevronDown } from "lucide-react"
 import { useAuth } from "../context/AuthContext"
 import { useCart } from "../context/CardContext"
 
 const NAV_LINKS = [
   { to: "/", label: "Home" },
   { to: "/products", label: "Products" },
-  { to: "/orders", label: "Order" },
+  { to: "/orders", label: "Orders" },
 ]
 
 export default function Navbar() {
@@ -17,150 +17,180 @@ export default function Navbar() {
   const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
-const handleLogout = useCallback(() => {
-  logout()
-  nav("/")
-}, [logout, nav])
-
-  const toggleMobile = useCallback(() => {
-    setMobileOpen(prev => !prev)
-  }, [])
+  const handleLogout = useCallback(() => {
+    logout()
+    setDropdownOpen(false)
+    setMobileOpen(false)
+    nav("/")
+  }, [logout, nav])
 
   const isActive = (path: string) => location.pathname === path
 
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handler)
+    return () => document.removeEventListener("mousedown", handler)
+  }, [])
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false)
+  }, [location.pathname])
+
   return (
-    <nav className="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-40 shadow-sm">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <nav className="bg-white border-b border-gray-100 sticky top-0 z-40">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
 
-        {/* LOGO */}
-        <Link
-          to="/"
-          className="flex items-center text-3xl text-[#755757] font-bold transition-all duration-300 hover:scale-110 hover:text-[#ca9c9cf2]"
-          aria-label="Glowve Home"
-        >
-          <span className="relative">
-            Glowve
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#ca9c9cf2] transition-all duration-300 group-hover:w-full"></span>
-          </span>
-        </Link>
-
-        {/* DESKTOP LINKS */}
-        <div className="hidden md:flex items-center gap-8">
-          {NAV_LINKS.map(link => (
-            <Link 
-              key={link.to} 
-              to={link.to} 
-              className="relative text-xl text-[#1f1e1e] font-medium transition-all duration-300 hover:text-[#ca9c9cf2] group"
-            >
-              {link.label}
-              <span 
-                className={`absolute -bottom-1 left-0 h-0.5 bg-[#ca9c9cf2] transition-all duration-300 ${
-                  isActive(link.to) ? 'w-full' : 'w-0 group-hover:w-full'
-                }`}
-              ></span>
-            </Link>
-          ))}
-
-          {user?.role === "admin" && (
-            <Link 
-              to="/analytics" 
-              className="relative text-base text-[#333333] font-medium transition-all duration-300 hover:text-[#ca9c9cf2] group"
-            >
-              Analytics
-              <span 
-                className={`absolute -bottom-1 left-0 h-0.5 bg-[#ca9c9cf2] transition-all duration-300 ${
-                  isActive('/analytics') ? 'w-full' : 'w-0 group-hover:w-full'
-                }`}
-              ></span>
-            </Link>
-          )}
-        </div>
-
-        {/* RIGHT SIDE */}
-        <div className="flex items-center gap-4">
-
-          {/* CART */}
+          {/* LOGO */}
           <Link
-            to="/cart"
-            className="relative p-2 hover:text-[#785454] transition-all duration-300 hover:scale-110 group"
+            to="/"
+            className="text-xl font-bold text-[#755757] tracking-tight hover:opacity-75 transition-opacity duration-200"
+            aria-label="Glowve Home"
           >
-            <ShoppingCart size={25} className="transition-transform duration-300 group-hover:rotate-12" />
-            {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
-                {cartCount > 99 ? "99+" : cartCount}
-              </span>
-            )}
+            Glowve
           </Link>
 
-          {/* USER DROPDOWN */}
-          {user ? (
-            <div className="relative hidden sm:block">
-              <button
-                onClick={() => setDropdownOpen(p => !p)}
-                className="flex items-center gap-2 px-3 py-2 border border-gray-100 rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-105"
+          {/* DESKTOP NAV */}
+          <div className="hidden md:flex items-center gap-1">
+            {NAV_LINKS.map(link => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  isActive(link.to)
+                    ? "text-[#755757] bg-[#755757]/8"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                }`}
               >
-                <User size={22} className="text-gray-700" />
-                <span className="text-lg text-gray-700 font-medium">{user.name}</span>
-              </button>
-
-              {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-xl py-2 animate-slideDown origin-top">
-                  <Link
-                    to="/profile"
-                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 text-base transition-all duration-200 hover:pl-5"
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    <User size={16} className="text-gray-600" />
-                    <span>Profile</span>
-                  </Link>
-                  <div className="border-t border-gray-200 my-1"></div>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 text-base transition-all duration-200 hover:pl-5 text-red-600"
-                  >
-                    <LogOut size={16} />
-                    <span>Logout</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <Link
-              to="/login"
-              className="px-5 py-2 bg-black hover:bg-zinc-700 text-white rounded-md text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg"
-            >
-              Login
-            </Link>
-          )}
-
-          {/* MOBILE TOGGLE */}
-          <button
-            className="md:hidden p-2 transition-all duration-300 hover:scale-110 hover:bg-white/20 rounded-lg"
-            onClick={toggleMobile}
-            aria-expanded={mobileOpen}
-          >
-            {mobileOpen ? (
-              <X size={22} className="transition-transform duration-300 rotate-90" />
-            ) : (
-              <Menu size={22} className="transition-transform duration-300" />
+                {link.label}
+              </Link>
+            ))}
+            {user?.role === "admin" && (
+              <Link
+                to="/analytics"
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  isActive("/analytics")
+                    ? "text-[#755757] bg-[#755757]/8"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                }`}
+              >
+                Analytics
+              </Link>
             )}
-          </button>
+          </div>
+
+          {/* RIGHT ACTIONS */}
+          <div className="flex items-center gap-1">
+
+            {/* CART */}
+            <Link
+              to="/cart"
+              className="relative p-2.5 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
+              aria-label={`Cart${cartCount > 0 ? ` — ${cartCount} items` : ""}`}
+            >
+              <ShoppingCart size={19} />
+              {cartCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-[#755757] text-white text-[10px] font-bold rounded-full min-w-[17px] h-[17px] flex items-center justify-center px-1 leading-none">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
+            </Link>
+
+            {/* USER DROPDOWN */}
+            {user ? (
+              <div className="relative hidden sm:block" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(p => !p)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all duration-200"
+                  aria-expanded={dropdownOpen}
+                  aria-haspopup="true"
+                >
+                  <div className="w-7 h-7 rounded-full bg-[#755757]/12 flex items-center justify-center text-[#755757] font-semibold text-xs shrink-0">
+                    {user.name?.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="max-w-[120px] truncate">{user.name}</span>
+                  <ChevronDown
+                    size={13}
+                    className={`text-gray-400 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-1.5 w-52 bg-white rounded-xl border border-gray-100 shadow-lg py-1.5 z-50">
+                    <div className="px-3 py-2.5 border-b border-gray-100 mb-1">
+                      <p className="text-[11px] text-gray-400 uppercase tracking-wide mb-0.5">Signed in as</p>
+                      <p className="text-sm font-semibold text-gray-900 truncate">{user.name}</p>
+                    </div>
+                    <Link
+                      to="/profile"
+                      className="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      <User size={14} className="text-gray-400" />
+                      Profile
+                    </Link>
+                    <Link
+                      to="/orders"
+                      className="flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      <Package size={14} className="text-gray-400" />
+                      My Orders
+                    </Link>
+                    <div className="border-t border-gray-100 my-1" />
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    >
+                      <LogOut size={14} />
+                      Sign out
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="hidden sm:inline-flex items-center px-4 py-2 bg-[#755757] text-white text-sm font-medium rounded-lg hover:bg-[#5a4242] transition-colors duration-200"
+              >
+                Sign in
+              </Link>
+            )}
+
+            {/* MOBILE TOGGLE */}
+            <button
+              className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
+              onClick={() => setMobileOpen(p => !p)}
+              aria-label="Toggle menu"
+              aria-expanded={mobileOpen}
+            >
+              {mobileOpen ? <X size={19} /> : <Menu size={19} />}
+            </button>
+          </div>
         </div>
       </div>
 
       {/* MOBILE MENU */}
       {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 animate-slideDown">
-          <div className="px-6 py-4 space-y-1">
+        <div className="md:hidden border-t border-gray-100 bg-white">
+          <div className="max-w-7xl mx-auto px-4 py-3 space-y-0.5">
             {NAV_LINKS.map(link => (
               <Link
                 key={link.to}
                 to={link.to}
-                className={`block px-3 py-2.5 hover:bg-gray-50 text-gray-700 font-medium rounded-md transition-all duration-200 hover:pl-5 ${
-                  isActive(link.to) ? 'bg-gray-100 border-l-4 border-[#ca9c9cf2]' : ''
+                className={`flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  isActive(link.to)
+                    ? "bg-[#755757]/8 text-[#755757]"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                 }`}
-                onClick={() => setMobileOpen(false)}
               >
                 {link.label}
               </Link>
@@ -169,10 +199,11 @@ const handleLogout = useCallback(() => {
             {user?.role === "admin" && (
               <Link
                 to="/analytics"
-                className={`block px-3 py-2.5 hover:bg-gray-50 text-gray-700 font-medium rounded-md transition-all duration-200 hover:pl-5 ${
-                  isActive('/analytics') ? 'bg-gray-100 border-l-4 border-[#ca9c9cf2]' : ''
+                className={`flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  isActive("/analytics")
+                    ? "bg-[#755757]/8 text-[#755757]"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                 }`}
-                onClick={() => setMobileOpen(false)}
               >
                 Analytics
               </Link>
@@ -180,59 +211,44 @@ const handleLogout = useCallback(() => {
 
             {user ? (
               <>
-                <div className="border-t border-gray-200 my-2"></div>
+                <div className="border-t border-gray-100 my-2 mt-3!" />
+                <div className="flex items-center gap-3 px-3 py-2">
+                  <div className="w-8 h-8 rounded-full bg-[#755757]/12 flex items-center justify-center text-[#755757] font-semibold text-xs">
+                    {user.name?.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">{user.name}</p>
+                    <p className="text-xs text-gray-400">View account</p>
+                  </div>
+                </div>
                 <Link
                   to="/profile"
-                  className="flex items-center gap-3 px-3 py-2.5 hover:bg-gray-50 text-gray-700 font-medium rounded-md transition-all duration-200 hover:pl-5"
-                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
                 >
-                  <User size={18} />
-                  <span>Profile</span>
-                </Link>
-                <Link
-                  to="/orders"
-                  className="flex items-center gap-3 px-3 py-2.5 hover:bg-gray-50 text-gray-700 font-medium rounded-md transition-all duration-200 hover:pl-5"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  <Package size={18} />
-                  <span>Orders</span>
+                  <User size={15} className="text-gray-400" />
+                  Profile
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-red-50 text-red-600 font-medium rounded-md transition-all duration-200 hover:pl-5"
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
                 >
-                  <LogOut size={18} />
-                  <span>Logout</span>
+                  <LogOut size={15} />
+                  Sign out
                 </button>
               </>
             ) : (
-              <Link
-                to="/login"
-                className="block px-3 py-2.5 bg-black text-white text-center rounded-md font-medium transition-all duration-300 hover:bg-zinc-700 hover:scale-105"
-                onClick={() => setMobileOpen(false)}
-              >
-                Login
-              </Link>
+              <div className="pt-2 pb-1 border-t border-gray-100 mt-2">
+                <Link
+                  to="/login"
+                  className="flex items-center justify-center w-full px-4 py-2.5 bg-[#755757] text-white text-sm font-semibold rounded-lg hover:bg-[#5a4242] transition-colors"
+                >
+                  Sign in
+                </Link>
+              </div>
             )}
           </div>
         </div>
       )}
-
-      <style>{`
-        @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-slideDown {
-          animation: slideDown 0.3s ease-out;
-        }
-      `}</style>
     </nav>
   )
 }
