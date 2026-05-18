@@ -1,73 +1,64 @@
-import { Gift } from "lucide-react";
-import { useState } from "react";
+import { Mail } from "lucide-react"
+import { useState } from "react"
 import { toast } from "sonner"
 
 export default function Newsletter() {
-  const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSubscribe = () => {
-    if (!email || !email.includes("@")) {
-      toast.warning("Please enter a valid email address");
-      return;
+    const trimmed = email.trim()
+    if (!trimmed || !trimmed.includes("@")) {
+      toast.warning("Please enter a valid email address")
+      return
     }
-
-    setIsLoading(true);
-    
+    setIsLoading(true)
     setTimeout(() => {
-      toast.success("Thank you for subscribing!");
-      setEmail("");
-      setIsLoading(false);
-    }, 500);
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleSubscribe();
-    }
-  };
+      toast.success("You're subscribed — welcome!")
+      setEmail("")
+      setIsLoading(false)
+    }, 500)
+  }
 
   return (
-    <section className="py-20 relative overflow-hidden">
-      <div className="max-w-4xl mx-auto px-4 relative border border-white/50 rounded-3xl p-8 md:p-12 shadow-sm">
-        <div className="text-center space-y-6">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-linear-to-br from-[#755757] to-[#5a4442] text-white mb-4">
-            <Gift size={28} />
-          </div>
-          
-          <h2 className="text-4xl md:text-4xl font-bold text-black">
-            Stay in the Loop
-          </h2>
-          
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Subscribe to our newsletter for exclusive deals, new arrivals, and beauty tips delivered to your inbox
-          </p>
-          
-          <form className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto pt-4">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Enter your email address"
-              disabled={isLoading}
-              className="flex-1 px-6 py-4 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#755757] focus:border-transparent bg-white shadow-sm text-black placeholder:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
-              aria-label="Email address"
-            />
-            <button
-              onClick={handleSubscribe}
-              disabled={isLoading}
-              className="bg-linear-to-r from-[#755757] to-[#5a4242] text-white px-8 py-4 rounded-xl font-bold hover:shadow-xl hover:scale-105 transition-all whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-            >
-              {isLoading ? "Subscribing..." : "Subscribe"}
-            </button>
-          </form>
-          
-          <p className="text-sm text-gray-500">
-            We respect your privacy. Unsubscribe anytime.
-          </p>
+    <section className="py-20 bg-gray-50">
+      <div className="max-w-xl mx-auto px-4 sm:px-6 text-center">
+
+        {/* ICON */}
+        <div className="w-12 h-12 rounded-2xl bg-[#755757]/10 flex items-center justify-center mx-auto mb-6">
+          <Mail size={20} className="text-[#755757]" />
         </div>
+
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
+          Stay in the loop
+        </h2>
+        <p className="text-gray-500 text-sm sm:text-base mb-8 max-w-sm mx-auto leading-relaxed">
+          Exclusive deals, new arrivals, and beauty tips — straight to your inbox.
+        </p>
+
+        {/* FORM */}
+        <div className="flex flex-col sm:flex-row gap-2.5 max-w-md mx-auto">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSubscribe()}
+            placeholder="your@email.com"
+            disabled={isLoading}
+            aria-label="Email address"
+            className="flex-1 px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#755757]/25 focus:border-[#755757] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          />
+          <button
+            onClick={handleSubscribe}
+            disabled={isLoading}
+            className="px-6 py-3 bg-[#755757] hover:bg-[#5a4242] text-white text-sm font-semibold rounded-xl transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+          >
+            {isLoading ? "Subscribing…" : "Subscribe"}
+          </button>
+        </div>
+
+        <p className="text-xs text-gray-400 mt-4">No spam, ever. Unsubscribe anytime.</p>
       </div>
     </section>
-  );
+  )
 }

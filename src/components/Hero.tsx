@@ -1,10 +1,10 @@
-import { useEffect, useState, useMemo } from "react";
-import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-import clo from "/clo.jpg";
-import makeup from "/makeup.jpg";
-import omo from "/omo.jpg";
-import facecream from "/facecream.jpg";
+import { useState, useCallback, useEffect, useMemo } from "react"
+import { Link } from "react-router-dom"
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
+import clo from "/clo.jpg"
+import makeup from "/makeup.jpg"
+import omo from "/omo.jpg"
+import facecream from "/facecream.jpg"
 
 const SLIDES = [
   {
@@ -31,76 +31,114 @@ const SLIDES = [
     description: "Gentle. Real. Authentic.",
     alt: "Natural skincare products",
   },
-];
+]
 
-const SLIDE_INTERVAL = 5000;
+const SLIDE_INTERVAL = 5000
+const TRANSITION_DURATION = 350
 
 export default function Hero() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [fading, setFading] = useState(false)
+
+  const goToSlide = useCallback((index: number) => {
+    setFading(true)
+    setTimeout(() => {
+      setCurrentSlide(index)
+      setFading(false)
+    }, TRANSITION_DURATION)
+  }, [])
+
+  const nextSlide = useCallback(() => {
+    goToSlide((currentSlide + 1) % SLIDES.length)
+  }, [currentSlide, goToSlide])
+
+  const prevSlide = useCallback(() => {
+    goToSlide((currentSlide - 1 + SLIDES.length) % SLIDES.length)
+  }, [currentSlide, goToSlide])
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIsTransitioning(true);
-      setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
+    const interval = setInterval(nextSlide, SLIDE_INTERVAL)
+    return () => clearInterval(interval)
+  }, [nextSlide])
 
-      setTimeout(() => setIsTransitioning(false), 400);
-    }, SLIDE_INTERVAL);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const currentSlideData = useMemo(() => SLIDES[currentSlide], [currentSlide]);
+  const slide = useMemo(() => SLIDES[currentSlide], [currentSlide])
 
   return (
-    <section>
-      <div className="relative w-full h-[80vh] overflow-hidden bg-gray-900">
+    <section aria-label="Featured collections">
+      <div className="relative w-full h-[85vh] min-h-[520px] max-h-[800px] overflow-hidden bg-gray-900">
+
+        {/* BACKGROUND IMAGE */}
         <img
-          src={currentSlideData.image}
-          alt={currentSlideData.alt}
-          className={`w-full h-full object-cover transition-all duration-1000 ease-in-out ${
-            isTransitioning ? "opacity-0 scale-105" : "opacity-100 scale-100"
-          }`}
+          src={slide.image}
+          alt={slide.alt}
+          style={{ transition: `opacity ${TRANSITION_DURATION}ms ease` }}
+          className={`absolute inset-0 w-full h-full object-cover ${fading ? "opacity-0" : "opacity-100"}`}
         />
 
-        {/* TEXT */}
-        <div className="absolute inset-0 flex flex-col justify-center items-start px-6 sm:px-10 lg:px-16 bg-linear-to-r from-black/60 to-black/20 text-white">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 max-w-xl drop-shadow-lg">
-            {currentSlideData.text}
-          </h1>
+        {/* GRADIENT OVERLAY */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/25 to-transparent" />
 
-          <p className="text-lg sm:text-xl lg:text-2xl opacity-90 max-w-md drop-shadow-md mb-6">
-            {currentSlideData.description}
-          </p>
-
-          {/* CTA BUTTON */}
-          <Link
-            to="/products"
-            className="inline-flex items-center gap-3 bg-white text-gray-900 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 hover:scale-105 transition-all shadow-xl group"
+        {/* CONTENT */}
+        <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-12 lg:px-20">
+          <div
+            style={{ transition: `opacity ${TRANSITION_DURATION}ms ease, transform ${TRANSITION_DURATION}ms ease` }}
+            className={`max-w-xl ${fading ? "opacity-0 translate-y-3" : "opacity-100 translate-y-0"}`}
           >
-            Shop Now
-            <ArrowRight
-              size={20}
-              className="group-hover:translate-x-1 transition-transform"
-            />
-          </Link>
+            <p className="text-white/60 text-xs font-semibold uppercase tracking-widest mb-4">
+              New Collection
+            </p>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 leading-[1.08]">
+              {slide.text}
+            </h1>
+            <p className="text-white/75 text-base sm:text-lg mb-8 leading-relaxed max-w-sm">
+              {slide.description}
+            </p>
+            <Link
+              to="/products"
+              className="inline-flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-xl font-semibold text-sm hover:bg-gray-50 transition-all duration-200 group w-fit shadow-lg"
+            >
+              Shop Now
+              <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+            </Link>
+          </div>
         </div>
 
+        {/* PREV ARROW */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 p-2 bg-white/10 hover:bg-white/25 text-white rounded-full backdrop-blur-sm border border-white/20 transition-all duration-200"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft size={18} />
+        </button>
+
+        {/* NEXT ARROW */}
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 p-2 bg-white/10 hover:bg-white/25 text-white rounded-full backdrop-blur-sm border border-white/20 transition-all duration-200"
+          aria-label="Next slide"
+        >
+          <ChevronRight size={18} />
+        </button>
+
         {/* DOTS */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2" role="tablist">
           {SLIDES.map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`h-2 rounded-full transition-all duration-300 ${
+              onClick={() => goToSlide(index)}
+              role="tab"
+              aria-selected={index === currentSlide}
+              aria-label={`Slide ${index + 1}`}
+              className={`rounded-full transition-all duration-300 ${
                 index === currentSlide
-                  ? "bg-white w-6"
-                  : "bg-white/50 w-2 hover:bg-white/75"
+                  ? "bg-white w-6 h-2"
+                  : "bg-white/40 hover:bg-white/70 w-2 h-2"
               }`}
             />
           ))}
         </div>
       </div>
     </section>
-  );
+  )
 }
