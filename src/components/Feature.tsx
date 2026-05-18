@@ -40,7 +40,7 @@ export default function Feature() {
             <Link
               key={item.name}
               to={item.to}
-              className="group relative overflow-hidden rounded-2xl bg-gray-100 aspect-[3/4] block"
+              className="group relative overflow-hidden rounded-2xl bg-gray-100 aspect-3/4 block"
             >
               <img
                 src={item.pic}
@@ -49,7 +49,7 @@ export default function Feature() {
                 loading="lazy"
               />
               {/* Bottom gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent" />
 
               {/* Category label */}
               <div className="absolute bottom-0 left-0 right-0 p-5">

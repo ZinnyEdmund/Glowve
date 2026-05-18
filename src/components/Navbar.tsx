@@ -211,7 +211,7 @@ export default function Navbar() {
 
             {user ? (
               <>
-                <div className="border-t border-gray-100 my-2 !mt-3" />
+                <div className="border-t border-gray-100 my-2 mt-3!" />
                 <div className="flex items-center gap-3 px-3 py-2">
                   <div className="w-8 h-8 rounded-full bg-[#755757]/12 flex items-center justify-center text-[#755757] font-semibold text-xs">
                     {user.name?.charAt(0).toUpperCase()}
