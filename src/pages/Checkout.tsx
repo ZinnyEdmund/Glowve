@@ -1,11 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CardContext'
 import { useAuth } from '../context/AuthContext'
 import { useOrders } from '../context/OrderContext'
+import { getDefaultAddress, saveDefaultAddress } from '../services/addressService'
 import ShippingForm from '../components/checkout/ShippingForm'
 import PaymentForm from '../components/checkout/PaymentForm'
 import OrderSummary from '../components/checkout/OrderSummary'
+import Loader from '../components/common/Loader'
 import type { ShippingAddress, PaymentMethod } from '../types/index'
 import { calculateOrderTotals } from '../services/paymentService'
 import { initiatePaystackPayment, processCardPayment } from '../services/paymentService'
@@ -21,7 +23,29 @@ export default function Checkout() {
 
   const [step, setStep] = useState<'shipping' | 'payment'>('shipping')
   const [shippingAddress, setShippingAddress] = useState<ShippingAddress | null>(null)
+  const [defaultAddress, setDefaultAddress] = useState<ShippingAddress | null>(null)
+  const [addressLoading, setAddressLoading] = useState(true)
   const [processing, setProcessing] = useState(false)
+
+  // Prefill the shipping form from the user's saved default address, if any.
+  // Must run before the early-return guards below to keep hook order stable.
+  useEffect(() => {
+    if (!user) return
+    let active = true
+
+    getDefaultAddress(user.id, user.email)
+      .then(address => {
+        if (active) setDefaultAddress(address)
+      })
+      .catch(err => {
+        console.error('Error loading default address:', err)
+      })
+      .finally(() => {
+        if (active) setAddressLoading(false)
+      })
+
+    return () => { active = false }
+  }, [user])
 
   if (!user) {
     navigate('/login')
@@ -38,8 +62,17 @@ export default function Checkout() {
   const shippingCost = isFreeShipping ? 0 : SHIPPING_COST
   const { tax, total } = calculateOrderTotals(cart, shippingCost)
 
-  const handleShippingSubmit = (data: ShippingAddress) => {
+  const handleShippingSubmit = async (data: ShippingAddress) => {
     setShippingAddress(data)
+
+    // Persist as the user's default address for next time. Non-blocking for
+    // the checkout flow itself — if this fails, we still proceed to payment.
+    try {
+      await saveDefaultAddress(user.id, data)
+    } catch (err) {
+      console.error('Failed to save address:', err)
+    }
+
     setStep('payment')
   }
 
@@ -137,17 +170,23 @@ export default function Checkout() {
         <div className="lg:col-span-2">
           <div className="bg-white rounded-xl shadow-lg p-6">
             {step === 'shipping' && (
-              <ShippingForm
-                initialData={{
-                  fullName: user.name,
-                  email: user.email,
-                  phone: user.phone,
-                  address: user.address,
-                  city: user.city,
-                  zipCode: user.zipCode
-                }}
-                onSubmit={handleShippingSubmit}
-              />
+              addressLoading ? (
+                <Loader />
+              ) : (
+                <ShippingForm
+                  initialData={{
+                    fullName: defaultAddress?.fullName || user.name,
+                    email: user.email,
+                    phone: defaultAddress?.phone || user.phone || '',
+                    address: defaultAddress?.address || '',
+                    city: defaultAddress?.city || '',
+                    state: defaultAddress?.state || '',
+                    zipCode: defaultAddress?.zipCode || '',
+                    country: defaultAddress?.country || 'Nigeria'
+                  }}
+                  onSubmit={handleShippingSubmit}
+                />
+              )
             )}
 
             {step === 'payment' && (

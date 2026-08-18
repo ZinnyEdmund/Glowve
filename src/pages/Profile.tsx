@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { getDefaultAddress, saveDefaultAddress } from '../services/addressService'
+import { updateProfileInfo } from '../services/profileService'
 import { toast } from "sonner"
 import {
   Pencil,
@@ -13,37 +15,86 @@ import {
   User,
   Crown
 } from 'lucide-react'
+import Loader from '../components/common/Loader'
+
+type ProfileForm = {
+  name: string
+  phone: string
+  address: string
+  city: string
+  zipCode: string
+  country: string
+}
+
+const EMPTY_FORM: ProfileForm = {
+  name: '',
+  phone: '',
+  address: '',
+  city: '',
+  zipCode: '',
+  country: 'Nigeria',
+}
 
 export default function Profile() {
-  const { user } = useAuth()
+  const { user, refreshUser } = useAuth()
+  const [pageLoading, setPageLoading] = useState(true)
   const [editing, setEditing] = useState(false)
-  const [form, setForm] = useState(user)
+  const [form, setForm] = useState<ProfileForm>(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
 
+  useEffect(() => {
+    if (!user) return
+    let active = true
+    setPageLoading(true)
+
+    getDefaultAddress(user.id, user.email)
+      .then(address => {
+        if (!active) return
+        setForm({
+          name: user.name || '',
+          phone: user.phone || address?.phone || '',
+          address: address?.address || '',
+          city: address?.city || '',
+          zipCode: address?.zipCode || '',
+          country: address?.country || 'Nigeria',
+        })
+      })
+      .catch(err => {
+        console.error('Error loading address:', err)
+        toast.error('Failed to load address details')
+        setForm({ ...EMPTY_FORM, name: user.name || '', phone: user.phone || '' })
+      })
+      .finally(() => {
+        if (active) setPageLoading(false)
+      })
+
+    return () => { active = false }
+  }, [user])
+
   if (!user) return null
+  if (pageLoading) return <Loader />
 
   async function save() {
-    // Guard against user being null so TypeScript can narrow the type....omoooo
     if (!user) return
-
     setSaving(true)
-    await new Promise(res => setTimeout(res, 500))
-    
+
     try {
-      const raw = localStorage.getItem('malli_mock_db_v1')
-      if (!raw) return
-      
-      const db = JSON.parse(raw)
-      const email = user.email
-      db.users[email] = { ...db.users[email], ...form }
-      
-      localStorage.setItem('malli_mock_db_v1', JSON.stringify(db))
-      localStorage.setItem('malli_user_v1', JSON.stringify(form))
-      
+      await updateProfileInfo(user.id, { name: form.name, phone: form.phone })
+      await saveDefaultAddress(user.id, {
+        fullName: form.name,
+        email: user.email,
+        phone: form.phone,
+        address: form.address,
+        city: form.city,
+        state: '',
+        zipCode: form.zipCode,
+        country: form.country,
+      })
+      await refreshUser()
+
       setEditing(false)
       setShowSuccess(true)
-      
       setTimeout(() => setShowSuccess(false), 3000)
     } catch (error) {
       console.error('Error saving profile:', error)
@@ -54,7 +105,6 @@ export default function Profile() {
   }
 
   function handleCancel() {
-    setForm(user)
     setEditing(false)
   }
 
@@ -136,8 +186,8 @@ export default function Profile() {
               {editing ? (
                 <input
                   type="text"
-                  value={form?.name || ''}
-                  onChange={e => setForm({ ...form!, name: e.target.value })}
+                  value={form.name}
+                  onChange={e => setForm({ ...form, name: e.target.value })}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#755757]"
                   placeholder="Enter your full name"
                 />
@@ -168,15 +218,15 @@ export default function Profile() {
               {editing ? (
                 <input
                   type="tel"
-                  value={form?.phone || ''}
-                  onChange={e => setForm({ ...form!, phone: e.target.value })}
+                  value={form.phone}
+                  onChange={e => setForm({ ...form, phone: e.target.value })}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#755757]"
                   placeholder="Enter your phone number"
                 />
               ) : (
                 <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 flex items-center gap-2">
                   <Phone className="w-4 h-4" />
-                  <span>{user.phone || 'Not provided'}</span>
+                  <span>{form.phone || 'Not provided'}</span>
                 </div>
               )}
             </div>
@@ -189,15 +239,15 @@ export default function Profile() {
               {editing ? (
                 <input
                   type="text"
-                  value={form?.address || ''}
-                  onChange={e => setForm({ ...form!, address: e.target.value })}
+                  value={form.address}
+                  onChange={e => setForm({ ...form, address: e.target.value })}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#755757]"
                   placeholder="Enter your address"
                 />
               ) : (
                 <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 flex items-center gap-2">
                   <Home className="w-4 h-4" />
-                  <span>{user.address || 'Not provided'}</span>
+                  <span>{form.address || 'Not provided'}</span>
                 </div>
               )}
             </div>
@@ -212,15 +262,15 @@ export default function Profile() {
                 {editing ? (
                   <input
                     type="text"
-                    value={form?.city || ''}
-                    onChange={e => setForm({ ...form!, city: e.target.value })}
+                    value={form.city}
+                    onChange={e => setForm({ ...form, city: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#755757]"
                     placeholder="Enter your city"
                   />
                 ) : (
                   <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 flex items-center gap-2">
                     <Building2 className="w-4 h-4" />
-                    <span>{user.city || 'Not provided'}</span>
+                    <span>{form.city || 'Not provided'}</span>
                   </div>
                 )}
               </div>
@@ -233,15 +283,15 @@ export default function Profile() {
                 {editing ? (
                   <input
                     type="text"
-                    value={form?.zipCode || ''}
-                    onChange={e => setForm({ ...form!, zipCode: e.target.value })}
+                    value={form.zipCode}
+                    onChange={e => setForm({ ...form, zipCode: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#755757]"
                     placeholder="Enter zip code"
                   />
                 ) : (
                   <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 flex items-center gap-2">
                     <MapPin className="w-4 h-4" />
-                    <span>{user.zipCode || 'Not provided'}</span>
+                    <span>{form.zipCode || 'Not provided'}</span>
                   </div>
                 )}
               </div>
@@ -306,30 +356,6 @@ export default function Profile() {
             </div>
           </div>
         </div>
-
-        {/* Security */}
-        {/* <div className="bg-linear-to-br from-purple-50 to-purple-100 rounded-xl p-6">
-          <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <Lock className="w-5 h-5" />
-            <span>Security</span>
-          </h3>
-
-          <div className="space-y-3">
-            <button className="w-full text-left px-4 py-2 bg-black rounded-lg hover:bg-gray-50 transition flex items-center justify-between">
-              <span className="text-gray-700 flex items-center gap-2">
-                Change Password
-              </span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-
-            <button className="w-full text-left px-4 py-2 bg-white rounded-lg hover:bg-gray-50 transition flex items-center justify-between">
-              <span className="text-gray-700 flex items-center gap-2">
-                Two-Factor Auth
-              </span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div> */}
       </div>
     </div>
   )

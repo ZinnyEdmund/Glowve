@@ -15,14 +15,11 @@ export type Product = {
 export type CartItem = Product & { quantity: number }
 
 export type User = {
+  id: string
   email: string
   name: string
   role: 'admin' | 'user'
   phone?: string
-  address?: string
-  city?: string
-  zipCode?: string
-  country?: string
   isPhoneVerified?: boolean
 }
 
