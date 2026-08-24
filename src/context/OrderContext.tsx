@@ -1,75 +1,44 @@
-import { createContext, useContext, useState, useEffect, useMemo } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react'
 import type { ReactNode } from 'react'
 import type { Order } from '../types/index'
 import { useAuth } from './AuthContext'
+import { fetchMyOrders } from '../services/orderService'
 
 type OrderContextType = {
   orders: Order[]
   loading: boolean
-  addOrder: (order: Order) => void
-  updateOrderStatus: (orderId: string, status: Order['status']) => void
-  getOrderById: (orderId: string) => Order | undefined
-  getUserOrders: () => Order[]
+  refetch: () => Promise<void>
 }
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined)
-
-const ORDERS_KEY = 'malli_orders_v1'
 
 export function OrderProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
   const { user } = useAuth()
 
-  // Load orders from localStorage
-  useEffect(() => {
+  const load = useCallback(async () => {
+    if (!user) {
+      setOrders([])
+      setLoading(false)
+      return
+    }
+    setLoading(true)
     try {
-      const stored = localStorage.getItem(ORDERS_KEY)
-      if (stored) {
-        setOrders(JSON.parse(stored))
-      }
+      const data = await fetchMyOrders()
+      setOrders(data)
     } catch (error) {
       console.error('Error loading orders:', error)
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [user])
 
-  // Save orders to localStorage
   useEffect(() => {
-    if (!loading) {
-      localStorage.setItem(ORDERS_KEY, JSON.stringify(orders))
-    }
-  }, [orders, loading])
+    load()
+  }, [load])
 
-  const addOrder = (order: Order) => {
-    setOrders(prev => [order, ...prev])
-  }
-
-  const updateOrderStatus = (orderId: string, status: Order['status']) => {
-    setOrders(prev =>
-      prev.map(order =>
-        order.id === orderId
-          ? { ...order, status, updatedAt: new Date().toISOString() }
-          : order
-      )
-    )
-  }
-
-  const getOrderById = (orderId: string) => {
-    return orders.find(order => order.id === orderId)
-  }
-
-  const getUserOrders = () => {
-    if (!user) return []
-    if (user.role === 'admin') return orders
-    return orders.filter(order => order.userEmail === user.email)
-  }
-
-  const value = useMemo(
-    () => ({ orders, loading, addOrder, updateOrderStatus, getOrderById, getUserOrders }),
-    [orders, loading, user]
-  )
+  const value = useMemo(() => ({ orders, loading, refetch: load }), [orders, loading, load])
 
   return <OrderContext.Provider value={value}>{children}</OrderContext.Provider>
 }

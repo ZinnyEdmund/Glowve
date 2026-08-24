@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useMemo } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
 import clo from "/clo.jpg"
@@ -6,27 +6,39 @@ import makeup from "/makeup.jpg"
 import omo from "/omo.jpg"
 import facecream from "/facecream.jpg"
 
-const SLIDES = [
+interface Slide {
+  image: string
+  eyebrow: string
+  text: string
+  description: string
+  alt: string
+}
+
+const SLIDES: Slide[] = [
   {
     image: makeup,
+    eyebrow: "Beauty",
     text: "Your glow, your story.",
     description: "Luxury beauty for everyday confidence.",
     alt: "Premium makeup products",
   },
   {
     image: clo,
+    eyebrow: "Fashion",
     text: "Style that speaks softly.",
     description: "Timeless looks for every mood.",
     alt: "Stylish hoodie fashion",
   },
   {
     image: omo,
+    eyebrow: "Jewelry",
     text: "Details define you.",
     description: "Minimal elegance for every moment.",
     alt: "Elegant jewelry necklace",
   },
   {
     image: facecream,
+    eyebrow: "Skincare",
     text: "Skin that feels loved.",
     description: "Gentle. Real. Authentic.",
     alt: "Natural skincare products",
@@ -34,106 +46,175 @@ const SLIDES = [
 ]
 
 const SLIDE_INTERVAL = 5000
-const TRANSITION_DURATION = 350
+const FADE_MS = 380
 
 export default function Hero() {
-  const [currentSlide, setCurrentSlide] = useState(0)
+  const [index, setIndex] = useState(0)
   const [fading, setFading] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const progressRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const prefersReduced = useRef(
+    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  )
 
-  const goToSlide = useCallback((index: number) => {
-    setFading(true)
-    setTimeout(() => {
-      setCurrentSlide(index)
-      setFading(false)
-    }, TRANSITION_DURATION)
+  const clearTimers = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    if (progressRef.current) clearInterval(progressRef.current)
   }, [])
 
-  const nextSlide = useCallback(() => {
-    goToSlide((currentSlide + 1) % SLIDES.length)
-  }, [currentSlide, goToSlide])
+  const goTo = useCallback(
+    (next: number) => {
+      if (fading) return
+      setFading(true)
+      setTimeout(() => {
+        setIndex(next)
+        setProgress(0)
+        setFading(false)
+      }, FADE_MS)
+    },
+    [fading]
+  )
 
-  const prevSlide = useCallback(() => {
-    goToSlide((currentSlide - 1 + SLIDES.length) % SLIDES.length)
-  }, [currentSlide, goToSlide])
+  const startAutoplay = useCallback(() => {
+    clearTimers()
+    if (prefersReduced.current) return
+
+    setProgress(0)
+    // Progress bar ticks every 50ms
+    progressRef.current = setInterval(() => {
+      setProgress(p => Math.min(p + 50 / SLIDE_INTERVAL, 1))
+    }, 50)
+
+    intervalRef.current = setInterval(() => {
+      setIndex(prev => {
+        const next = (prev + 1) % SLIDES.length
+        setFading(true)
+        setTimeout(() => {
+          setProgress(0)
+          setFading(false)
+        }, FADE_MS)
+        return next
+      })
+    }, SLIDE_INTERVAL)
+  }, [clearTimers])
 
   useEffect(() => {
-    const interval = setInterval(nextSlide, SLIDE_INTERVAL)
-    return () => clearInterval(interval)
-  }, [nextSlide])
+    startAutoplay()
+    return clearTimers
+  }, [startAutoplay, clearTimers])
 
-  const slide = useMemo(() => SLIDES[currentSlide], [currentSlide])
+  const handleManualNav = useCallback(
+    (next: number) => {
+      clearTimers()
+      goTo(next)
+      // Restart autoplay after manual navigation
+      setTimeout(startAutoplay, FADE_MS + 50)
+    },
+    [clearTimers, goTo, startAutoplay]
+  )
+
+  const slide = SLIDES[index]
 
   return (
-    <section aria-label="Featured collections">
+    <section aria-label="Featured collections" aria-roledescription="carousel">
       <div className="relative w-full h-[85vh] min-h-[520px] max-h-[800px] overflow-hidden bg-gray-900">
 
         {/* BACKGROUND IMAGE */}
         <img
+          key={index}
           src={slide.image}
           alt={slide.alt}
-          style={{ transition: `opacity ${TRANSITION_DURATION}ms ease` }}
-          className={`absolute inset-0 w-full h-full object-cover ${fading ? "opacity-0" : "opacity-100"}`}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            transition: prefersReduced.current ? "none" : `opacity ${FADE_MS}ms ease`,
+            opacity: fading ? 0 : 1,
+          }}
         />
 
         {/* GRADIENT OVERLAY */}
-        <div className="absolute inset-0 bg-linear-to-r from-black/65 via-black/25 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/20 to-transparent" />
+
+        {/* PROGRESS BAR */}
+        {!prefersReduced.current && (
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-white/10 z-10">
+            <div
+              className="h-full bg-white/60 transition-none"
+              style={{ width: `${progress * 100}%` }}
+            />
+          </div>
+        )}
 
         {/* CONTENT */}
         <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-12 lg:px-20">
           <div
-            style={{ transition: `opacity ${TRANSITION_DURATION}ms ease, transform ${TRANSITION_DURATION}ms ease` }}
-            className={`max-w-xl ${fading ? "opacity-0 translate-y-3" : "opacity-100 translate-y-0"}`}
+            style={{
+              transition: prefersReduced.current
+                ? "none"
+                : `opacity ${FADE_MS}ms ease, transform ${FADE_MS}ms ease`,
+              opacity: fading ? 0 : 1,
+              transform: fading ? "translateY(8px)" : "translateY(0)",
+            }}
+            className="max-w-xl"
           >
-            <p className="text-white/60 text-xs font-semibold uppercase tracking-widest mb-4">
-              New Collection
+            {/* Per-slide eyebrow — no longer hardcoded */}
+            <p className="text-white/50 text-[11px] font-semibold uppercase tracking-[0.18em] mb-4">
+              {slide.eyebrow}
             </p>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 leading-[1.08]">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 leading-[1.06]">
               {slide.text}
             </h1>
-            <p className="text-white/75 text-base sm:text-lg mb-8 leading-relaxed max-w-sm">
+            <p className="text-white/70 text-base sm:text-lg mb-8 leading-relaxed max-w-sm">
               {slide.description}
             </p>
             <Link
               to="/products"
-              className="inline-flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-xl font-semibold text-sm hover:bg-gray-50 transition-all duration-200 group w-fit shadow-lg"
+              className="inline-flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-xl font-semibold text-sm hover:bg-gray-50 transition-colors duration-200 group w-fit shadow-lg"
             >
               Shop Now
-              <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+              <ArrowRight
+                size={15}
+                className="group-hover:translate-x-0.5 transition-transform duration-200"
+              />
             </Link>
           </div>
         </div>
 
-        {/* PREV ARROW */}
+        {/* PREV / NEXT */}
         <button
-          onClick={prevSlide}
-          className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 p-2 bg-white/10 hover:bg-white/25 text-white rounded-full backdrop-blur-sm border border-white/20 transition-all duration-200"
+          onClick={() =>
+            handleManualNav((index - 1 + SLIDES.length) % SLIDES.length)
+          }
+          className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 p-2.5 bg-white/10 hover:bg-white/25 text-white rounded-full backdrop-blur-sm border border-white/20 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
           aria-label="Previous slide"
         >
           <ChevronLeft size={18} />
         </button>
-
-        {/* NEXT ARROW */}
         <button
-          onClick={nextSlide}
-          className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 p-2 bg-white/10 hover:bg-white/25 text-white rounded-full backdrop-blur-sm border border-white/20 transition-all duration-200"
+          onClick={() => handleManualNav((index + 1) % SLIDES.length)}
+          className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 p-2.5 bg-white/10 hover:bg-white/25 text-white rounded-full backdrop-blur-sm border border-white/20 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
           aria-label="Next slide"
         >
           <ChevronRight size={18} />
         </button>
 
-        {/* DOTS */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2" role="tablist">
-          {SLIDES.map((_, index) => (
+        {/* SLIDE DOTS */}
+        <div
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2"
+          role="tablist"
+          aria-label="Slide navigation"
+        >
+          {SLIDES.map((s, i) => (
             <button
-              key={index}
-              onClick={() => goToSlide(index)}
+              key={i}
               role="tab"
-              aria-selected={index === currentSlide}
-              aria-label={`Slide ${index + 1}`}
-              className={`rounded-full transition-all duration-300 ${
-                index === currentSlide
+              aria-selected={i === index}
+              aria-label={`${s.eyebrow} — slide ${i + 1} of ${SLIDES.length}`}
+              onClick={() => handleManualNav(i)}
+              className={`rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+                i === index
                   ? "bg-white w-6 h-2"
-                  : "bg-white/40 hover:bg-white/70 w-2 h-2"
+                  : "bg-white/35 hover:bg-white/65 w-2 h-2"
               }`}
             />
           ))}

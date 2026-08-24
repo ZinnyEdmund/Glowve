@@ -1,17 +1,40 @@
 // src/pages/OrderDetails.tsx
 
+import { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import { useOrders } from '../context/OrderContext'
+import { fetchOrderById } from '../services/orderService'
+import type { Order } from '../types/index'
 import { formatCurrency, formatDateTime } from '../utils/formatters'
 import { ORDER_STATUS_COLORS, ORDER_STATUS_LABELS } from '../utils/constants'
 import { HelpCircle, ArrowLeft, Check, Mail, Phone } from 'lucide-react'
+import Loader from '../components/common/Loader'
 
 export default function OrderDetails() {
   const { orderId } = useParams<{ orderId: string }>()
   const navigate = useNavigate()
-  const { getOrderById } = useOrders()
+  const [order, setOrder] = useState<Order | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const order = orderId ? getOrderById(orderId) : null
+  useEffect(() => {
+    if (!orderId) return
+    let active = true
+    setLoading(true)
+
+    fetchOrderById(orderId)
+      .then((data) => {
+        if (active) setOrder(data)
+      })
+      .catch((err) => {
+        console.error('Error loading order:', err)
+      })
+      .finally(() => {
+        if (active) setLoading(false)
+      })
+
+    return () => { active = false }
+  }, [orderId])
+
+  if (loading) return <Loader />
 
   if (!order) {
     return (
@@ -41,7 +64,7 @@ export default function OrderDetails() {
           Back to Orders
         </button>
         <h1 className="text-4xl font-bold text-gray-900 mb-2">Order Details</h1>
-        <p className="text-gray-600">Order ID: {order.id}</p>
+        <p className="text-gray-600">Order ID: {order.orderNumber}</p>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
@@ -106,7 +129,7 @@ export default function OrderDetails() {
                   <div>
                     <p className="font-bold text-gray-900">Shipped</p>
                     <p className="text-sm text-gray-600">
-                      {['shipped', 'delivered'].includes(order.status)
+                      {order.trackingNumber
                         ? `Tracking: ${order.trackingNumber}`
                         : 'Not yet shipped'}
                     </p>
@@ -161,7 +184,6 @@ export default function OrderDetails() {
                   />
                   <div className="flex-1">
                     <h3 className="font-bold text-gray-900 mb-2">{item.title}</h3>
-                    <p className="text-sm text-gray-600 mb-2">{item.description}</p>
                     <div className="flex items-center gap-4">
                       <span className="text-sm text-gray-600">Qty: {item.quantity}</span>
                       <span className="text-sm text-gray-600">Price: {formatCurrency(item.price)}</span>
@@ -263,19 +285,6 @@ export default function OrderDetails() {
                 <p className="font-mono font-bold text-blue-900">{order.trackingNumber}</p>
               </div>
             )}
-
-            {/* Actions */}
-            <div className="mt-6 space-y-3">
-              <button className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">
-                Track Order
-              </button>
-              <button className="w-full px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-semibold">
-                Download Invoice
-              </button>
-              <button className="w-full px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-semibold">
-                Contact Support
-              </button>
-            </div>
           </div>
         </div>
       </div>

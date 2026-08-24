@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { toast } from "sonner"
-import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, User, MailCheck } from 'lucide-react'
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -14,8 +13,8 @@ export default function Register() {
   const [error, setError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
   const { register } = useAuth()
-  const nav = useNavigate()
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
@@ -40,17 +39,42 @@ export default function Register() {
 
     try {
       await register(form.name, form.email, form.password)
-      toast.success('Account created! You can now log in.')
-      nav('/login')
+      setSubmitted(true)
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message)
       } else {
-        toast.error('Something went wrong. Please try again.')
+        setError('Something went wrong. Please try again.')
       }
     } finally {
       setLoading(false)
     }
+  }
+
+  if (submitted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
+        <div className="max-w-md w-full">
+          <div className="bg-white rounded-lg shadow p-8 text-center">
+            <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
+              <MailCheck className="w-6 h-6 text-green-600" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Confirm your email</h1>
+            <p className="text-sm text-gray-600 mb-6">
+              We sent a confirmation link to{' '}
+              <span className="font-semibold text-gray-900">{form.email}</span>. Click it to
+              activate your account, then sign in.
+            </p>
+            <Link
+              to="/login"
+              className="inline-block w-full bg-black hover:bg-zinc-800 text-white py-2.5 rounded-md font-medium transition"
+            >
+              Back to sign in
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (

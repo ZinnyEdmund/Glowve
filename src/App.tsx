@@ -4,6 +4,8 @@ import AuthLayout from "./layouts/AuthLayout"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
+import ForgotPassword from "./pages/ForgottenPassword"
+import ResetPassword from "./pages/ResetPassword"
 import Profile from "./pages/Profile"
 import Orders from "./pages/Orders"
 import OrderDetails from "./pages/OrderDetails"
@@ -12,6 +14,7 @@ import Cart from "./pages/Cart"
 import Checkout from "./pages/Checkout"
 import PaymentSuccess from "./pages/PaymentSuccess"
 import PaymentFailed from "./pages/PaymentFailed"
+import PaymentCallback from "./pages/PaymentCallback"
 import Products from "./pages/Products"
 // import VerifyPhone from "./pages/VerifyPhone"
 import ProtectedRoute from "./components/ProtectedRoute"
@@ -23,9 +26,12 @@ export default function App() {
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         {/* <Route path="/verify-phone" element={<VerifyPhone />} /> */}
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFailed />} />
+        <Route path="/payment-callback" element={<PaymentCallback />} />
       </Route>
 
       {/* Main Routes - With Navbar/Footer */}

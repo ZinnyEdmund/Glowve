@@ -1,27 +1,48 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import { useCart } from '../context/CardContext'
 import { useAuth } from '../context/AuthContext'
 import { useOrders } from '../context/OrderContext'
+import { getDefaultAddress, saveDefaultAddress } from '../services/addressService'
+import { createOrder } from '../services/orderService'
+import { initiatePaystackPayment, calculateOrderTotals } from '../services/paymentService'
 import ShippingForm from '../components/checkout/ShippingForm'
 import PaymentForm from '../components/checkout/PaymentForm'
 import OrderSummary from '../components/checkout/OrderSummary'
+import Loader from '../components/common/Loader'
 import type { ShippingAddress, PaymentMethod } from '../types/index'
-import { calculateOrderTotals } from '../services/paymentService'
-import { initiatePaystackPayment, processCardPayment } from '../services/paymentService'
-import { sendOrderConfirmationEmail } from '../services/emailService'
-import { generateOrderId, generateTrackingNumber } from '../utils/formatters'
 import { SHIPPING_COST, FREE_SHIPPING_THRESHOLD } from '../utils/constants'
 
 export default function Checkout() {
   const navigate = useNavigate()
   const { cart, clearCart } = useCart()
   const { user } = useAuth()
-  const { addOrder } = useOrders()
+  const { refetch } = useOrders()
 
   const [step, setStep] = useState<'shipping' | 'payment'>('shipping')
   const [shippingAddress, setShippingAddress] = useState<ShippingAddress | null>(null)
+  const [defaultAddress, setDefaultAddress] = useState<ShippingAddress | null>(null)
+  const [addressLoading, setAddressLoading] = useState(true)
   const [processing, setProcessing] = useState(false)
+
+  useEffect(() => {
+    if (!user) return
+    let active = true
+
+    getDefaultAddress(user.id, user.email)
+      .then(address => {
+        if (active) setDefaultAddress(address)
+      })
+      .catch(err => {
+        console.error('Error loading default address:', err)
+      })
+      .finally(() => {
+        if (active) setAddressLoading(false)
+      })
+
+    return () => { active = false }
+  }, [user])
 
   if (!user) {
     navigate('/login')
@@ -38,78 +59,59 @@ export default function Checkout() {
   const shippingCost = isFreeShipping ? 0 : SHIPPING_COST
   const { tax, total } = calculateOrderTotals(cart, shippingCost)
 
-  const handleShippingSubmit = (data: ShippingAddress) => {
+  const handleShippingSubmit = async (data: ShippingAddress) => {
     setShippingAddress(data)
+
+    try {
+      await saveDefaultAddress(user.id, data)
+    } catch (err) {
+      console.error('Failed to save address:', err)
+    }
+
     setStep('payment')
   }
 
-  const handlePaymentSubmit = async (method: PaymentMethod, cardDetails?: { cardNumber: string; expiryDate: string; cvv: string; cardholderName: string }) => {
+  const handlePaymentSubmit = async (method: PaymentMethod) => {
     if (!shippingAddress) return
 
     setProcessing(true)
 
     try {
-      let paymentResult
-      const orderId = generateOrderId()
+      // Step 1: create the order — server validates stock and computes the
+      // real totals. Payment status starts as 'pending' regardless of method.
+      const order = await createOrder({
+        items: cart.map(item => ({ productId: item.id, quantity: item.quantity })),
+        shipping: shippingAddress,
+        paymentMethod: method,
+      })
 
-      // Process payment based on method
-      if (method === 'paystack') {
-        paymentResult = await initiatePaystackPayment(user.email, total, orderId)
-      } else if (method === 'card') {
-        if (!cardDetails) throw new Error('Card details are required')
-        paymentResult = await processCardPayment(
-          {
-            number: cardDetails.cardNumber,
-            expiry: cardDetails.expiryDate,
-            cvc: cardDetails.cvv,
-            name: cardDetails.cardholderName
-          },
-          total
-        )
-      } else {
-        // Bank transfer - no immediate payment
-        paymentResult = { success: true, transactionId: `BANK_${Date.now()}` }
+      clearCart()
+      await refetch()
+
+      if (method === 'bank_transfer') {
+        // No payment gateway involved — order is recorded and stays pending
+        // until manually confirmed.
+        navigate(`/payment-success?order=${order.orderNumber}`)
+        return
       }
 
-      if (paymentResult.success) {
-        // Create order
-        const order = {
-          id: orderId,
-          userId: user.email,
-          userEmail: user.email,
-          items: cart,
-          shippingAddress,
-          paymentMethod: method,
-          subtotal,
-          shipping: shippingCost,
-          tax,
-          total,
-          status: 'pending' as const,
-          paymentStatus: method === 'bank_transfer' ? 'pending' as const : 'paid' as const,
-          transactionId: paymentResult.transactionId,
-          trackingNumber: generateTrackingNumber(),
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          date: new Date().toISOString()
-        }
+      // Step 2: start the Paystack transaction for the order we just created.
+      const result = await initiatePaystackPayment(order.id)
 
-        // Save order
-        addOrder(order)
-
-        // Send confirmation email
-        await sendOrderConfirmationEmail(order)
-
-        // Clear cart
-        clearCart()
-
-        // Redirect to success page
-        navigate(`/payment-success?order=${orderId}`)
-      } else {
+      if (!result.success || !result.authorizationUrl) {
+        toast.error(result.error || 'Could not start payment')
         navigate('/payment-failed')
+        return
       }
+
+      // Step 3: hand off to Paystack's hosted page. Paystack will redirect
+      // back to /payment-callback once the customer finishes there.
+      window.location.href = result.authorizationUrl
     } catch (error) {
       console.error('Checkout error:', error)
-      navigate('/payment-failed')
+      const message = error instanceof Error ? error.message : 'Something went wrong placing your order'
+      toast.error(message)
+      navigate('/cart')
     } finally {
       setProcessing(false)
     }
@@ -137,17 +139,23 @@ export default function Checkout() {
         <div className="lg:col-span-2">
           <div className="bg-white rounded-xl shadow-lg p-6">
             {step === 'shipping' && (
-              <ShippingForm
-                initialData={{
-                  fullName: user.name,
-                  email: user.email,
-                  phone: user.phone,
-                  address: user.address,
-                  city: user.city,
-                  zipCode: user.zipCode
-                }}
-                onSubmit={handleShippingSubmit}
-              />
+              addressLoading ? (
+                <Loader />
+              ) : (
+                <ShippingForm
+                  initialData={{
+                    fullName: defaultAddress?.fullName || user.name,
+                    email: user.email,
+                    phone: defaultAddress?.phone || user.phone || '',
+                    address: defaultAddress?.address || '',
+                    city: defaultAddress?.city || '',
+                    state: defaultAddress?.state || '',
+                    zipCode: defaultAddress?.zipCode || '',
+                    country: defaultAddress?.country || 'Nigeria'
+                  }}
+                  onSubmit={handleShippingSubmit}
+                />
+              )
             )}
 
             {step === 'payment' && (

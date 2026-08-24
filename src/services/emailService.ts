@@ -22,8 +22,8 @@ export async function sendOrderConfirmationEmail(
     const emailData = {
       to_email: order.shippingAddress.email,
       to_name: order.shippingAddress.fullName,
-      subject: `Order Confirmation - ${order.id}`,
-      order_id: order.id,
+      subject: `Order Confirmation - ${order.orderNumber}`,
+      order_id: order.orderNumber,
       order_total: `$${order.total.toFixed(2)}`,
       order_items: order.items
         .map((item) => `${item.title} x ${item.quantity}`)
@@ -74,20 +74,20 @@ export async function sendShippingUpdateEmail(order: Order): Promise<boolean> {
     const emailData = {
       to_email: order.shippingAddress.email,
       to_name: order.shippingAddress.fullName,
-      subject: `Your Order ${order.id} Has Shipped!`,
-      order_id: order.id,
+      subject: `Your Order ${order.orderNumber} Has Shipped!`,
+      order_id: order.orderNumber,
       tracking_number: order.trackingNumber,
       message: `Your order has been shipped and is on its way!`,
     };
 
     console.log("Sending shipping update:", emailData);
     await new Promise((res) => setTimeout(res, 1000));
-    toast.success(`Shipping update sent for order ${order.id}`);
+    toast.success(`Shipping update sent for order ${order.orderNumber}`);
     return true;
   } catch (error) {
     console.error("Shipping email error:", error);
 
-    toast.error(`Failed to send shipping update for order ${order.id}`);
+    toast.error(`Failed to send shipping update for order ${order.orderNumber}`);
 
     return false;
   }
