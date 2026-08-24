@@ -38,12 +38,20 @@ export type PaymentMethod = 'card' | 'bank_transfer' | 'paystack' | 'stripe'
 
 export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
 
+export type OrderItem = {
+  id: string
+  productId: number
+  title: string
+  thumbnail: string
+  price: number
+  quantity: number
+}
+
 export type Order = {
   id: string
+  orderNumber: string
   userId: string
-  date: string
-  userEmail: string
-  items: CartItem[]
+  items: OrderItem[]
   shippingAddress: ShippingAddress
   paymentMethod: PaymentMethod
   subtotal: number
@@ -53,9 +61,9 @@ export type Order = {
   status: OrderStatus
   paymentStatus: 'pending' | 'paid' | 'failed'
   transactionId?: string
+  trackingNumber?: string
   createdAt: string
   updatedAt: string
-  trackingNumber?: string
 }
 
 export type AnalyticsData = {

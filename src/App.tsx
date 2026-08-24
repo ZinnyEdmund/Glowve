@@ -14,6 +14,7 @@ import Cart from "./pages/Cart"
 import Checkout from "./pages/Checkout"
 import PaymentSuccess from "./pages/PaymentSuccess"
 import PaymentFailed from "./pages/PaymentFailed"
+import PaymentCallback from "./pages/PaymentCallback"
 import Products from "./pages/Products"
 // import VerifyPhone from "./pages/VerifyPhone"
 import ProtectedRoute from "./components/ProtectedRoute"
@@ -30,6 +31,7 @@ export default function App() {
         {/* <Route path="/verify-phone" element={<VerifyPhone />} /> */}
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFailed />} />
+        <Route path="/payment-callback" element={<PaymentCallback />} />
       </Route>
 
       {/* Main Routes - With Navbar/Footer */}

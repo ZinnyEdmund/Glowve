@@ -1,6 +1,4 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { toast } from "sonner"
 import {
   Package,
   ShoppingBag,
@@ -13,29 +11,11 @@ import {
   Eye,
   Loader2,
 } from "lucide-react";
-import { fetchOrders } from "../services/mockApi";
-import type { Order } from "../types/index";
+import { useOrders } from "../context/OrderContext";
+import { formatCurrency, formatDateTime } from "../utils/formatters";
 
 export default function Orders() {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadOrders() {
-      try {
-        const data = await fetchOrders();
-        console.log("Loaded orders:", data); // Debug log
-        toast.success("Orders loaded successfully!");
-        setOrders(data);
-      } catch (error) {
-        console.error("Error loading orders:", error);
-        toast.error("Failed to load orders. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadOrders();
-  }, []);
+  const { orders, loading } = useOrders();
 
   if (loading) {
     return (
@@ -123,11 +103,11 @@ export default function Orders() {
               <div className="flex flex-wrap gap-4 justify-between items-start">
                 <div>
                   <p className="text-sm text-gray-600 mb-1">Order ID</p>
-                  <p className="text-xl font-bold text-gray-900">{order.id}</p>
+                  <p className="text-xl font-bold text-gray-900">{order.orderNumber}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600 mb-1">Order Date</p>
-                  <p className="font-semibold text-gray-900">{order.date}</p>
+                  <p className="font-semibold text-gray-900">{formatDateTime(order.createdAt)}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600 mb-1">Status</p>
@@ -143,7 +123,7 @@ export default function Orders() {
                 <div className="text-right">
                   <p className="text-sm text-gray-600 mb-1">Total Amount</p>
                   <p className="text-2xl font-bold text-green-600">
-                    ${order.total.toFixed(2)}
+                    {formatCurrency(order.total)}
                   </p>
                 </div>
               </div>
@@ -182,14 +162,14 @@ export default function Orders() {
                         {item.title}
                       </h4>
                       <p className="text-sm text-gray-600">
-                        ${item.price.toFixed(2)} × {item.quantity}
+                        {formatCurrency(item.price)} × {item.quantity}
                       </p>
                     </div>
 
                     {/* Item Total */}
                     <div className="text-right">
                       <p className="font-bold text-gray-900">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        {formatCurrency(item.price * item.quantity)}
                       </p>
                     </div>
                   </div>
@@ -201,41 +181,34 @@ export default function Orders() {
                 <div className="max-w-sm ml-auto space-y-2">
                   <div className="flex justify-between text-gray-600">
                     <span>Subtotal:</span>
-                    <span className="font-semibold">
-                      ${(order.total * 0.87).toFixed(2)}
-                    </span>
+                    <span className="font-semibold">{formatCurrency(order.subtotal)}</span>
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>Shipping:</span>
                     <span className="font-semibold">
-                      ${(order.total * 0.05).toFixed(2)}
+                      {order.shipping === 0 ? 'FREE' : formatCurrency(order.shipping)}
                     </span>
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>Tax:</span>
-                    <span className="font-semibold">
-                      ${(order.total * 0.08).toFixed(2)}
-                    </span>
+                    <span className="font-semibold">{formatCurrency(order.tax)}</span>
                   </div>
                   <div className="flex justify-between text-lg font-bold text-gray-900 pt-2 border-t">
                     <span>Total:</span>
-                    <span className="text-green-600">
-                      ${order.total.toFixed(2)}
-                    </span>
+                    <span className="text-green-600">{formatCurrency(order.total)}</span>
                   </div>
                 </div>
               </div>
 
               {/* Action Buttons */}
               <div className="mt-6 flex flex-wrap gap-3">
-                <button className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 transition font-semibold">
-                  <Truck className="w-4 h-4" />
-                  Track Order
-                </button>
-                <button className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold">
+                <Link
+                  to={`/orders/${order.id}`}
+                  className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 transition font-semibold"
+                >
                   <Eye className="w-4 h-4" />
-                  View Invoice
-                </button>
+                  View Details
+                </Link>
                 {order.status.toLowerCase() === "delivered" && (
                   <button className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold">
                     <Star className="w-4 h-4" />
@@ -272,7 +245,7 @@ export default function Orders() {
             <div>
               <p className="text-sm text-gray-600">Total Spent</p>
               <p className="text-2xl font-bold text-gray-900">
-                ${orders.reduce((sum, o) => sum + o.total, 0).toFixed(2)}
+                {formatCurrency(orders.reduce((sum, o) => sum + o.total, 0))}
               </p>
             </div>
           </div>
