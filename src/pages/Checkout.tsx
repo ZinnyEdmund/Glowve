@@ -44,13 +44,15 @@ export default function Checkout() {
     return () => { active = false }
   }, [user])
 
-  if (!user) {
-    navigate('/login')
-    return null
-  }
+  useEffect(() => {
+    if (!user) {
+      navigate('/login')
+    } else if (cart.length === 0) {
+      navigate('/cart')
+    }
+  }, [user, cart.length, navigate])
 
-  if (cart.length === 0) {
-    navigate('/cart')
+  if (!user || cart.length === 0) {
     return null
   }
 
